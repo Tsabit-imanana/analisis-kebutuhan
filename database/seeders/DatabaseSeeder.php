@@ -8,6 +8,8 @@ use App\Models\tahun_periode;
 use App\Models\bulan_periode;
 use App\Models\Task_details;
 use App\Models\weeklyLog;
+use App\Models\periodeLaporan;
+use App\Models\budget;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -93,6 +95,19 @@ class DatabaseSeeder extends Seeder
                 'bulan' => $bln,
             ]);
         }
+
+        periodeLaporan::create([
+            'bulan_id' => 1, // Januari
+            'tahun_id' => 1, // 2026
+        ]);
+        periodeLaporan::create([
+            'bulan_id' => 2, // Februari
+            'tahun_id' => 1, // 2026
+        ]);
+        budget::create([
+            'periode_laporan_id' => 1, // Januari 2026
+            'jumlah_budget' => 1000000,
+        ]);
 
     }
 }
