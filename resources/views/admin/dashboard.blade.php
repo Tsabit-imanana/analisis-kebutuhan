@@ -8,5 +8,6 @@
 </head>
 <body>
     <a href="{{ route('tasks.index') }}">View Tasks</a>
+    <a href="{{ route('weekly_log.index') }}">View Weekly Logs</a>
 </body>
 </html>

@@ -12,7 +12,7 @@ class UpdateweeklyLogRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,13 @@ class UpdateweeklyLogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            's_date' => 'required|date',
+            'f_date' => 'required|date|after_or_equal:s_date',
+            'logged_by' => 'required|exists:users,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ];
     }
 }

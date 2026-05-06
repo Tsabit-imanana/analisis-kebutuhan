@@ -6,6 +6,8 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use App\Models\Task_details;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -14,10 +16,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        // dd(Task::with('details')->get());
-    return view('admin.task.index', [
-        'tasks' => Task::with(['details', 'assignedTo', 'assignedFrom'])->get(),
-    ]);
+        return view('admin.task.index', [
+            'tasks' => Task::with(['details', 'assignedTo', 'assignedFrom'])->get(),
+            'users' => User::select('id', 'name')->get(),
+        ]);
     }
 
     /**
@@ -55,8 +57,7 @@ class TaskController extends Controller
             'status' => 'pending',
         ]);
 
-        return $result;
-        //add view nanti
+        return redirect()->back();
     }
 
     /**
@@ -78,16 +79,41 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTaskRequest $request, Task $task)
-    {
-        //
+public function update(Request $request, $id)
+{
+    $request->validate([
+    'status' => 'required|in:pending,on_progress,submitted,accepted'
+]);
+    $task = Task::findOrFail($id);
+
+    // update task utama
+    $task->update([
+        'title' => $request->title,
+        'description' => $request->description,
+    ]);
+
+    // ambil status terakhir
+    $lastDetail = $task->details()
+        ->orderByDesc('created_at')
+        ->first();
+
+    // cek apakah status berubah
+    if (!$lastDetail || $lastDetail->status !== $request->status) {
+
+        Task_details::create([
+            'task_id' => $task->id,
+            'status' => $request->status,
+        ]);
     }
 
+    return redirect()->back();
+}
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
-    {
-        //
-    }
+public function destroy($id)
+{
+    Task::findOrFail($id)->delete();
+    return redirect()->back();
+}
 }
