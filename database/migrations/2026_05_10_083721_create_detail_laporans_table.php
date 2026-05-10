@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('periode_laporans', function (Blueprint $table) {
+        Schema::create('detail_laporans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bulan_id')
-                  ->constrained('bulan_periodes')
+            $table->foreignId('periode_laporan_id')
+                  ->constrained('periode_laporans')
                   ->cascadeOnDelete();
-            $table->foreignId('tahun_id')
-                  ->constrained('tahun_periodes')
+            $table->foreignId('user_id')
+                  ->constrained('users')
                   ->cascadeOnDelete();
-            $table->foreignId('divisi_id')
-                  ->constrained('divisis')
-                  ->cascadeOnDelete();
+            $table->string('kegiatan');
+            $table->string('deskripsi');
+            $table->integer('jumlah_anggaran');
+            $table->string('bukti_foto')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('periode_laporans');
+        Schema::dropIfExists('detail_laporans');
     }
 };

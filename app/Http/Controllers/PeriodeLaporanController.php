@@ -29,7 +29,15 @@ class PeriodeLaporanController extends Controller
      */
     public function store(StoreperiodeLaporanRequest $request)
     {
-        //
+        $validated = $request->validate([
+            'tahun_id' => 'required|exists:tahun_periodes,id',
+            'bulan_id' => 'required|exists:bulan_periodes,id',
+            'divisi_id' => 'required|exists:divisis,id',
+        ]);
+
+        periodeLaporan::create($validated);
+
+        return redirect()->route('finance.index')->with('success', 'Periode laporan berhasil ditambahkan');
     }
 
     /**

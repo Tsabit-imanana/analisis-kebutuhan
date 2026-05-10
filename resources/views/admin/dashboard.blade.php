@@ -9,5 +9,6 @@
 <body>
     <a href="{{ route('tasks.index') }}">View Tasks</a>
     <a href="{{ route('weekly_log.index') }}">View Weekly Logs</a>
+    <a href="{{ route('finance.index') }}">View Finance</a>
 </body>
 </html>

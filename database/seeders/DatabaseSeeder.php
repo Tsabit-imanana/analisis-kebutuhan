@@ -10,6 +10,8 @@ use App\Models\Task_details;
 use App\Models\weeklyLog;
 use App\Models\periodeLaporan;
 use App\Models\budget;
+use App\Models\divisi;
+use App\Models\detailLaporan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -96,17 +98,30 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        periodeLaporan::create([
-            'bulan_id' => 1, // Januari
-            'tahun_id' => 1, // 2026
+        divisi::create([
+            'nama_divisi' => 'IT',
         ]);
         periodeLaporan::create([
             'bulan_id' => 2, // Februari
             'tahun_id' => 1, // 2026
+            'divisi_id' => 1, // IT
         ]);
         budget::create([
             'periode_laporan_id' => 1, // Januari 2026
             'jumlah_budget' => 1000000,
+        ]);
+        budget::create([
+            'periode_laporan_id' => 1, // Januari 2026
+            'jumlah_budget' => 2000000,
+        ]);
+
+        detailLaporan::create([
+            'periode_laporan_id' => 1, // Januari 2026
+            'user_id' => 3, // ID user employee
+            'kegiatan' => 'Kegiatan 1',
+            'deskripsi' => 'Deskripsi kegiatan 1',
+            'jumlah_anggaran' => 500000,
+            'bukti_foto' => null,
         ]);
 
     }
