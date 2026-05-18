@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    font-family: 'DM Sans', sans-serif;
+    width: 240px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.logo-img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu ul li {
+    margin: 12px 0;
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.menu ul li a i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.menu ul li a:hover {
+    color: #1abc9c;
+}
+
+.menu-bottom {
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+}

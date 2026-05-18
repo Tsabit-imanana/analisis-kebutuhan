@@ -1,6 +1,6 @@
 body {
     background: #f1f5f9;
-    font-family: Arial;
+    font-family: 'Inter', sans-serif;
 }
 
 .login-container {
@@ -34,10 +34,6 @@ body {
 .logo-text {
     font-size: 24px;
     font-weight: bold;
-}
-
-.login-box h3 {
-    margin-bottom: 10px;
 }
 
 .login-box h3 {

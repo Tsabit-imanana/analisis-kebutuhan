@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite(['resources/css/login.css'])
+    @vite(['resources/css/welcome.css'])
     <title>Welcome</title>
 </head>
 <body>
     <div class="login-container">
         <div class="login-box">
             <div class="logo">
-                <img src="..." alt="Logo MUMS" class="logo-img">
+                <img src="..." alt="Logo MUMS" class="logo-img"> {{-- Logo MUMS --}}
                 <h1 class="logo-text">MUMS</h1>
             </div>
             <h3>Sign In</h3>
-            <form method="POST" action="...">
+            <form method="POST" action="..."> {{-- Login Route --}}
                 @csrf
                 <div class="form-group">
                     <label for="email">Email</label>

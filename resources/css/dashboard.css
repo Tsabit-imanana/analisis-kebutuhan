@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 30px;
+}

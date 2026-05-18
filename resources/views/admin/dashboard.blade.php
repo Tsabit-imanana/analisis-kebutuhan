@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @vite(['resources/css/dashboard.css'])
     <title>Admin Dashboard</title>
 </head>
 <body>
-    <a href="{{ route('tasks.index') }}">View Tasks</a>
-    <a href="{{ route('weekly_log.index') }}">View Weekly Logs</a>
+    <div class="container">
+        @include('layout.sidebar')
+
+        <div class="dashboard-content">
+            <h1>Admin Dashboard</h1>
+        </div>
+    </div>
 </body>
 </html>
