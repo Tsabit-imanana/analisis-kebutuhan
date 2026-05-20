@@ -18,7 +18,8 @@ class TaskDetailsFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'status' => fake()->randomElement(['todo', 'on_progress', 'submitted', 'accepted', 'rejected']),
+            'notes' => fake()->optional()->sentence(),
         ];
     }
 }

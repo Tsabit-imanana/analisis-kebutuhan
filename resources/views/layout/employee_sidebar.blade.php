@@ -11,23 +11,16 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-                <img src="..." alt="Logo MUMS" class="logo-img"> {{-- Logo MUMS --}}
+                <img src="..." alt="Logo MUMS" class="logo-img">
                 <h1 class="logo-text">MUMS</h1>
             </div>
 
             <nav class="menu">
                 <ul>
-                    <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('weekly_log.index') }}">Weekly Log</a></li>
                     <li><a href="{{ route('tasks.index') }}">Task Management</a></li>
-                    <li><a href="#">Docs Management</a></li>
-                    <li><a href="{{ route('finance.index') }}">Finance Budgeting</a></li>
                 </ul>
 
                 <ul class="menu-bottom">
-                    <li><a href="#">My Profile</a></li>
-                    <li><a href="{{ route('admin.users.index') }}">Role Management</a></li>
-                    <li><a href="{{ route('settings.divisi.index') }}">Settings & Security</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

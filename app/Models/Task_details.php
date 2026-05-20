@@ -14,6 +14,7 @@ class Task_details extends Model
     protected $fillable = [
         'task_id',
         'status',
+        'notes',
     ];
     public function task()
 {

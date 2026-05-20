@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Management</title>
+@extends('layout.sidebar')
+
+@section('title', 'Finance Management - MUMS')
+
+@section('content')
     <style>
-        * {
+        .finance-page * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
+        .finance-page {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
             padding: 20px;
+            min-height: calc(100vh - 40px);
         }
 
-        .container {
+        .finance-page .container {
             max-width: 1200px;
             margin: 0 auto;
             background-color: white;
@@ -26,7 +26,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
+        .finance-page h1 {
             color: #333;
             margin-bottom: 20px;
             display: flex;
@@ -34,12 +34,12 @@
             align-items: center;
         }
 
-        .button-group {
+        .finance-page .button-group {
             display: flex;
             gap: 10px;
         }
 
-        .btn {
+        .finance-page .btn {
             padding: 10px 16px;
             border: none;
             border-radius: 4px;
@@ -50,47 +50,47 @@
             transition: background-color 0.3s;
         }
 
-        .btn-primary {
+        .finance-page .btn-primary {
             background-color: #007bff;
             color: white;
         }
 
-        .btn-primary:hover {
+        .finance-page .btn-primary:hover {
             background-color: #0056b3;
         }
 
-        .btn-secondary {
+        .finance-page .btn-secondary {
             background-color: #6c757d;
             color: white;
         }
 
-        .btn-secondary:hover {
+        .finance-page .btn-secondary:hover {
             background-color: #545b62;
         }
 
-        .btn-info {
+        .finance-page .btn-info {
             background-color: #17a2b8;
             color: white;
             padding: 6px 12px;
             font-size: 12px;
         }
 
-        .btn-info:hover {
+        .finance-page .btn-info:hover {
             background-color: #138496;
         }
 
-        .btn-danger {
+        .finance-page .btn-danger {
             background-color: #dc3545;
             color: white;
             padding: 6px 12px;
             font-size: 12px;
         }
 
-        .btn-danger:hover {
+        .finance-page .btn-danger:hover {
             background-color: #c82333;
         }
 
-        .filter-section {
+        .finance-page .filter-section {
             background-color: #f9f9f9;
             padding: 15px;
             border-radius: 4px;
@@ -98,14 +98,14 @@
             border: 1px solid #ddd;
         }
 
-        .filter-group {
+        .finance-page .filter-group {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             align-items: flex-end;
         }
 
-        .filter-group label {
+        .finance-page .filter-group label {
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -113,7 +113,7 @@
             color: #555;
         }
 
-        .filter-group select {
+        .finance-page .filter-group select {
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -121,49 +121,49 @@
             min-width: 150px;
         }
 
-        .alert {
+        .finance-page .alert {
             padding: 12px 16px;
             border-radius: 4px;
             margin-bottom: 20px;
         }
 
-        .alert-success {
+        .finance-page .alert-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
 
-        table {
+        .finance-page table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
 
-        thead {
+        .finance-page thead {
             background-color: #007bff;
             color: white;
         }
 
-        th {
+        .finance-page th {
             padding: 12px;
             text-align: left;
             font-weight: bold;
         }
 
-        td {
+        .finance-page td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
         }
 
-        tbody tr:hover {
+        .finance-page tbody tr:hover {
             background-color: #f9f9f9;
         }
 
-        tbody tr:nth-child(even) {
+        .finance-page tbody tr:nth-child(even) {
             background-color: #fafafa;
         }
 
-        .status-badge {
+        .finance-page .status-badge {
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 12px;
@@ -171,22 +171,22 @@
             text-align: center;
         }
 
-        .status-good {
+        .finance-page .status-good {
             background-color: #d4edda;
             color: #155724;
         }
 
-        .status-warning {
+        .finance-page .status-warning {
             background-color: #fff3cd;
             color: #856404;
         }
 
-        .status-danger {
+        .finance-page .status-danger {
             background-color: #f8d7da;
             color: #721c24;
         }
 
-        .modal {
+        .finance-page .modal {
             display: none;
             position: fixed;
             z-index: 999;
@@ -198,7 +198,7 @@
             background-color: rgba(0, 0, 0, 0.5);
         }
 
-        .modal-content {
+        .finance-page .modal-content {
             background-color: #fff;
             margin: 5% auto;
             padding: 20px;
@@ -207,7 +207,7 @@
             border-radius: 6px;
         }
 
-        .modal-header {
+        .finance-page .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -216,31 +216,31 @@
             padding-bottom: 10px;
         }
 
-        .close {
+        .finance-page .close {
             font-size: 28px;
             font-weight: bold;
             color: #aaa;
             cursor: pointer;
         }
 
-        .close:hover {
+        .finance-page .close:hover {
             color: #000;
         }
 
-        .form-group {
+        .finance-page .form-group {
             margin-bottom: 15px;
         }
 
-        .form-group label {
+        .finance-page .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .finance-page .form-group input,
+        .finance-page .form-group select,
+        .finance-page .form-group textarea {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -249,19 +249,19 @@
             font-size: 14px;
         }
 
-        .form-group textarea {
+        .finance-page .form-group textarea {
             resize: vertical;
             min-height: 80px;
         }
 
-        .form-actions {
+        .finance-page .form-actions {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
             margin-top: 20px;
         }
 
-        .back-link {
+        .finance-page .back-link {
             display: inline-block;
             margin-bottom: 20px;
             padding: 8px 12px;
@@ -272,33 +272,33 @@
             transition: background-color 0.3s;
         }
 
-        .back-link:hover {
+        .finance-page .back-link:hover {
             background-color: #bbb;
         }
 
-        .currency {
+        .finance-page .currency {
             text-align: right;
             font-weight: bold;
         }
 
-        .percentage {
+        .finance-page .percentage {
             text-align: center;
             font-weight: bold;
         }
 
-        .empty-state {
+        .finance-page .empty-state {
             text-align: center;
             padding: 40px;
             color: #999;
         }
 
-        .action-buttons {
+        .finance-page .action-buttons {
             display: flex;
             gap: 5px;
         }
     </style>
-</head>
-<body>
+
+    <div class="finance-page">
     <div class="container">
         <h1>
             Finance Management
@@ -312,6 +312,20 @@
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger" style="background-color:#f8d7da;color:#721c24;border:1px solid #f5c6cb;padding:12px 16px;border-radius:4px;margin-bottom:20px;">
+                {{ session('error') }}
+            </div>
+            <script>
+                window.addEventListener('DOMContentLoaded', function() {
+                    const msg = @json(session('error'));
+                    if (msg) {
+                        // show a small popup notification
+                        alert(msg);
+                    }
+                });
+            </script>
         @endif
 
         @if($finansialData->isEmpty())
@@ -366,7 +380,7 @@
                 </thead>
                 <tbody>
                     @foreach ($finansialData as $data)
-                        <tr class="periode-row" data-divisi="{{ $data['periode']->divisi_id }}" data-tahun="{{ $data['periode']->tahun_id }}" data-bulan="{{ $data['periode']->bulan_id }}">
+                        <tr class="periode-row" data-periode-id="{{ $data['periode']->id }}" data-divisi="{{ $data['periode']->divisi_id }}" data-tahun="{{ $data['periode']->tahun_id }}" data-bulan="{{ $data['periode']->bulan_id }}">
                             <td>
                                 <strong>{{ $data['periode']->bulan->bulan ?? '-' }} {{ $data['periode']->tahun->tahun ?? '-' }}</strong>
                             </td>
@@ -525,8 +539,8 @@
 
     <script>
         function openBudgetModal(periodeId) {
-            const row = document.querySelector(`tr[data-divisi]`);
-            const periodeDisplay = row?.querySelector('td strong').textContent || 'Unknown';
+            const row = document.querySelector(`tr.periode-row[data-periode-id="${periodeId}"]`);
+            const periodeDisplay = row?.querySelector('td strong')?.textContent || 'Unknown';
             
             document.getElementById('budget_periode_id').value = periodeId;
             document.getElementById('budget_periode_display').value = periodeDisplay;
@@ -538,11 +552,8 @@
         }
 
         function openDetailModal(periodeId) {
-            const row = Array.from(document.querySelectorAll('tr.periode-row')).find(r => {
-                const firstForm = r.parentElement;
-                return firstForm;
-            });
-            const periodeDisplay = document.querySelector(`tr[data-divisi] td strong`)?.textContent || 'Unknown';
+            const row = document.querySelector(`tr.periode-row[data-periode-id="${periodeId}"]`);
+            const periodeDisplay = row?.querySelector('td strong')?.textContent || 'Unknown';
             
             document.getElementById('detail_periode_id').value = periodeId;
             document.getElementById('detail_periode_display').value = periodeDisplay;
@@ -604,5 +615,6 @@
             }
         };
     </script>
-</body>
-</html>
+    </div>
+    </div>
+@endsection

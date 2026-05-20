@@ -29,11 +29,18 @@ class PeriodeLaporanController extends Controller
      */
     public function store(StoreperiodeLaporanRequest $request)
     {
-        $validated = $request->validate([
-            'tahun_id' => 'required|exists:tahun_periodes,id',
-            'bulan_id' => 'required|exists:bulan_periodes,id',
-            'divisi_id' => 'required|exists:divisis,id',
-        ]);
+        // use validated data from FormRequest
+        $validated = $request->validated();
+
+        // Prevent duplicate periode for same tahun/bulan/divisi
+        $exists = periodeLaporan::where('tahun_id', $validated['tahun_id'])
+            ->where('bulan_id', $validated['bulan_id'])
+            ->where('divisi_id', $validated['divisi_id'])
+            ->exists();
+
+        if ($exists) {
+            return redirect()->route('finance.index')->with('error', 'Periode untuk tahun, bulan, dan divisi tersebut sudah ada.');
+        }
 
         periodeLaporan::create($validated);
 

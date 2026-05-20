@@ -35,9 +35,13 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. Contoh Alamat No. 123',
             'no_telepon' => '081234567890',
             'role' => 'admin',
-            'divisi' => 'IT',
+            'divisi_id' => null,
         ]);
-        User::create([
+        $divisi = divisi::create([
+            'nama_divisi' => 'IT',
+        ]);
+
+        $spv = User::create([
             'name' => 'Test SPV',
             'email' => 'test@spv.com',
             'password' => bcrypt('password'),
@@ -47,9 +51,10 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. Contoh Alamat No. 123',
             'no_telepon' => '081234567890',
             'role' => 'spv',
-            'divisi' => 'IT',
+            'divisi_id' => $divisi->id,
         ]);
-        User::create([
+
+        $employee = User::create([
             'name' => 'Test employee',
             'email' => 'test@employee.com',
             'password' => bcrypt('password'),
@@ -59,25 +64,25 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. Contoh Alamat No. 123',
             'no_telepon' => '081234567890',
             'role' => 'employee',
-            'divisi' => 'IT',
+            'divisi_id' => $divisi->id,
         ]);
 
         Task::create([
             'title' => 'Task 1',
             'description' => 'Deskripsi task 1',
-            'assigned_to' => 3, // ID user employee
-            'assigned_from' => 2, // ID user spv  
-        ]); 
+            'assigned_to' => $employee->id,
+            'assigned_from' => $spv->id,
+        ]);
 
         Task_details::create([
             'task_id' => 1,
-            'status' => 'pending',
-            ]);
+            'status' => 'todo',
+        ]);
 
         weeklyLog::create([
             's_date' => '2026-05-01',
             'f_date' => '2026-05-07',
-            'logged_by' => 3, // ID user employee
+            'logged_by' => $employee->id,
             'title' => 'Weekly Log 1',
             'description' => 'Deskripsi weekly log 1',
         ]);
@@ -98,13 +103,10 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        divisi::create([
-            'nama_divisi' => 'IT',
-        ]);
         periodeLaporan::create([
             'bulan_id' => 2, // Februari
             'tahun_id' => 1, // 2026
-            'divisi_id' => 1, // IT
+            'divisi_id' => $divisi->id, // IT
         ]);
         budget::create([
             'periode_laporan_id' => 1, // Januari 2026

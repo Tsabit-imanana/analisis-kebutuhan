@@ -12,7 +12,7 @@ class UpdatedivisiRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check() && auth()->user()->role === 'admin';
     }
 
     /**
@@ -23,7 +23,7 @@ class UpdatedivisiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama_divisi' => ['required', 'string', 'max:255'],
         ];
     }
 }

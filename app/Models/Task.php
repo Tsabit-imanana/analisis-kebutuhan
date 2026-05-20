@@ -23,6 +23,11 @@ public function details()
     return $this->hasMany(Task_details::class, 'task_id');
 }
 
+public function latestDetail()
+{
+    return $this->hasOne(Task_details::class, 'task_id')->latestOfMany();
+}
+
 public function assignedTo()
 {
     return $this->belongsTo(User::class, 'assigned_to');

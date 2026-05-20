@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Detail - {{ $periode->bulan->bulan }} {{ $periode->tahun->tahun }}</title>
+@extends('layout.sidebar')
+
+@section('title', 'Finance Detail - MUMS')
+
+@section('content')
     <style>
-        * {
+        .finance-page * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
+        .finance-page {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
             padding: 20px;
+            min-height: calc(100vh - 40px);
         }
 
-        .container {
+        .finance-page .container {
             max-width: 1200px;
             margin: 0 auto;
             background-color: white;
@@ -26,7 +26,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .header {
+        .finance-page .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -35,16 +35,16 @@
             border-bottom: 2px solid #007bff;
         }
 
-        .header h1 {
+        .finance-page .header h1 {
             color: #333;
         }
 
-        .header p {
+        .finance-page .header p {
             color: #666;
             margin-top: 5px;
         }
 
-        .btn {
+        .finance-page .btn {
             padding: 10px 16px;
             border: none;
             border-radius: 4px;
@@ -55,43 +55,43 @@
             transition: background-color 0.3s;
         }
 
-        .btn-primary {
+        .finance-page .btn-primary {
             background-color: #007bff;
             color: white;
         }
 
-        .btn-primary:hover {
+        .finance-page .btn-primary:hover {
             background-color: #0056b3;
         }
 
-        .btn-secondary {
+        .finance-page .btn-secondary {
             background-color: #6c757d;
             color: white;
         }
 
-        .btn-secondary:hover {
+        .finance-page .btn-secondary:hover {
             background-color: #545b62;
         }
 
-        .btn-danger {
+        .finance-page .btn-danger {
             background-color: #dc3545;
             color: white;
             padding: 6px 12px;
             font-size: 12px;
         }
 
-        .btn-danger:hover {
+        .finance-page .btn-danger:hover {
             background-color: #c82333;
         }
 
-        .summary-section {
+        .finance-page .summary-section {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin-bottom: 30px;
         }
 
-        .summary-card {
+        .finance-page .summary-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px;
@@ -100,23 +100,23 @@
             text-align: center;
         }
 
-        .summary-card.budget {
+        .finance-page .summary-card.budget {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .summary-card.realisasi {
+        .finance-page .summary-card.realisasi {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
-        .summary-card.sisa {
+        .finance-page .summary-card.sisa {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
 
-        .summary-card.percentage {
+        .finance-page .summary-card.percentage {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
 
-        .summary-card h3 {
+        .finance-page .summary-card h3 {
             font-size: 12px;
             font-weight: 600;
             opacity: 0.9;
@@ -124,12 +124,12 @@
             text-transform: uppercase;
         }
 
-        .summary-card .amount {
+        .finance-page .summary-card .amount {
             font-size: 24px;
             font-weight: bold;
         }
 
-        h2 {
+        .finance-page h2 {
             color: #333;
             margin-top: 30px;
             margin-bottom: 15px;
@@ -137,41 +137,41 @@
             border-bottom: 2px solid #007bff;
         }
 
-        table {
+        .finance-page table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
         }
 
-        thead {
+        .finance-page thead {
             background-color: #007bff;
             color: white;
         }
 
-        th {
+        .finance-page th {
             padding: 12px;
             text-align: left;
             font-weight: bold;
         }
 
-        td {
+        .finance-page td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
         }
 
-        tbody tr:hover {
+        .finance-page tbody tr:hover {
             background-color: #f9f9f9;
         }
 
-        tbody tr:nth-child(even) {
+        .finance-page tbody tr:nth-child(even) {
             background-color: #fafafa;
         }
 
-        .currency {
+        .finance-page .currency {
             text-align: right;
         }
 
-        .empty-state {
+        .finance-page .empty-state {
             text-align: center;
             padding: 40px;
             color: #999;
@@ -180,7 +180,7 @@
             border: 1px dashed #ddd;
         }
 
-        .back-link {
+        .finance-page .back-link {
             display: inline-block;
             padding: 8px 12px;
             background-color: #ddd;
@@ -190,22 +190,22 @@
             transition: background-color 0.3s;
         }
 
-        .back-link:hover {
+        .finance-page .back-link:hover {
             background-color: #bbb;
         }
 
-        .photo {
+        .finance-page .photo {
             max-width: 100px;
             max-height: 100px;
             border-radius: 4px;
             cursor: pointer;
         }
 
-        .photo:hover {
+        .finance-page .photo:hover {
             opacity: 0.8;
         }
 
-        .modal {
+        .finance-page .modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -216,7 +216,7 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .modal-image {
+        .finance-page .modal-image {
             margin: auto;
             display: block;
             width: 80%;
@@ -226,7 +226,7 @@
             border-radius: 8px;
         }
 
-        .close-modal {
+        .finance-page .close-modal {
             position: absolute;
             top: 20px;
             right: 35px;
@@ -236,43 +236,43 @@
             cursor: pointer;
         }
 
-        .close-modal:hover {
+        .finance-page .close-modal:hover {
             color: #bbb;
         }
 
-        .action-buttons {
+        .finance-page .action-buttons {
             display: flex;
             gap: 5px;
         }
 
-        .info-grid {
+        .finance-page .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
 
-        .info-item {
+        .finance-page .info-item {
             background-color: #f9f9f9;
             padding: 15px;
             border-radius: 4px;
             border-left: 4px solid #007bff;
         }
 
-        .info-item label {
+        .finance-page .info-item label {
             font-weight: bold;
             color: #555;
             display: block;
             margin-bottom: 5px;
         }
 
-        .info-item p {
+        .finance-page .info-item p {
             color: #333;
             font-size: 16px;
         }
     </style>
-</head>
-<body>
+
+    <div class="finance-page">
     <div class="container">
         <div class="header">
             <div>
@@ -415,5 +415,6 @@
             }
         };
     </script>
-</body>
-</html>
+    </div>
+    </div>
+@endsection

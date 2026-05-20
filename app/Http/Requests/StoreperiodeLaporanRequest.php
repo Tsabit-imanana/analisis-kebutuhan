@@ -12,7 +12,7 @@ class StoreperiodeLaporanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check() && auth()->user()->role === 'admin';
     }
 
     /**
@@ -23,7 +23,9 @@ class StoreperiodeLaporanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'tahun_id' => ['required', 'exists:tahun_periodes,id'],
+            'bulan_id' => ['required', 'exists:bulan_periodes,id'],
+            'divisi_id' => ['required', 'exists:divisis,id'],
         ];
     }
 }

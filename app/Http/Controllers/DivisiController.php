@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoredivisiRequest;
 use App\Http\Requests\UpdatedivisiRequest;
 use App\Models\divisi;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class DivisiController extends Controller
 {
@@ -13,7 +15,15 @@ class DivisiController extends Controller
      */
     public function index()
     {
-        //
+        $search = request('search');
+        $query = divisi::query();
+        if ($search) {
+            $query->where('nama_divisi', 'LIKE', "%{$search}%");
+        }
+
+        $divisis = $query->orderBy('nama_divisi')->paginate(12)->withQueryString();
+
+        return view('admin.settings.divisi.index', compact('divisis', 'search'));
     }
 
     /**
@@ -21,7 +31,7 @@ class DivisiController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.settings.divisi.create');
     }
 
     /**
@@ -29,7 +39,10 @@ class DivisiController extends Controller
      */
     public function store(StoredivisiRequest $request)
     {
-        //
+        $data = $request->validated();
+        divisi::create($data);
+
+        return Redirect::route('settings.divisi.index')->with('success', 'Divisi berhasil ditambahkan.');
     }
 
     /**
@@ -37,7 +50,7 @@ class DivisiController extends Controller
      */
     public function show(divisi $divisi)
     {
-        //
+        return view('admin.settings.divisi.show', compact('divisi'));
     }
 
     /**
@@ -45,7 +58,7 @@ class DivisiController extends Controller
      */
     public function edit(divisi $divisi)
     {
-        //
+        return view('admin.settings.divisi.edit', compact('divisi'));
     }
 
     /**
@@ -53,7 +66,10 @@ class DivisiController extends Controller
      */
     public function update(UpdatedivisiRequest $request, divisi $divisi)
     {
-        //
+        $data = $request->validated();
+        $divisi->update($data);
+
+        return Redirect::route('settings.divisi.index')->with('success', 'Divisi berhasil diperbarui.');
     }
 
     /**
@@ -61,6 +77,13 @@ class DivisiController extends Controller
      */
     public function destroy(divisi $divisi)
     {
-        //
+        // Prevent deletion if in use by users or periodeLaporans
+        if ($divisi->users()->count() > 0 || $divisi->periodeLaporans()->count() > 0) {
+            return Redirect::back()->with('error', 'Divisi tidak dapat dihapus karena masih direferensi oleh data lain.');
+        }
+
+        $divisi->delete();
+
+        return Redirect::route('settings.divisi.index')->with('success', 'Divisi berhasil dihapus.');
     }
 }
