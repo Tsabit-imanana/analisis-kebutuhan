@@ -124,5 +124,7 @@ class DatabaseSeeder extends Seeder
             'bukti_foto' => null,
         ]);
 
+
+        
     }
 }

@@ -13,7 +13,7 @@ Route::get('/', function () {
 Route::prefix('tasks')->name('tasks.')->group(function () {
     Route::get('/', [TaskController::class, 'index'])->name('index');
     Route::post('/', [TaskController::class, 'addTask'])->name('store');
-    Route::put('/{id}', [TaskController::class, 'update'])->name('update');
+    Route::put('/{id}', [TaskController::class, 'editTask'])->name('update');
     Route::delete('/{id}', [TaskController::class, 'destroy'])->name('destroy');
 });
 
