@@ -24,6 +24,7 @@ Route::prefix('weekly_log')->name('weekly_log.')->group(function () {
     Route::delete('/{id}', [WeeklyLogController::class, 'destroy'])->name('destroy');
 });
 
+
 Route::prefix('finance')->name('finance.')->group(function () {
     Route::get('/', [FinanceController::class, 'index'])->name('index');
     Route::get('/{id}', [FinanceController::class, 'show'])->name('show');
