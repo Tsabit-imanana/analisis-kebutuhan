@@ -1,31 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Kelola Divisi</title>
+@extends('layout.sidebar')
+
+@section('title', 'Kelola Divisi')
+
+@section('content')
     <style>
-        body { font-family: Arial, sans-serif; margin:0; background:#f8fafc; color:#0f172a }
-        .page { padding:24px }
+        .page { padding:24px; font-family: Arial, sans-serif; color:#0f172a }
         .card { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; margin-bottom:18px }
         .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px }
         input { padding:10px; border:1px solid #cbd5e1; border-radius:8px; width:100% }
-        .btn { padding:10px 14px; border-radius:8px; border:0; cursor:pointer; font-weight:700 }
+        .btn { padding:10px 14px; border-radius:8px; border:0; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; justify-content:center; text-decoration:none }
         .btn-primary { background:#0f172a; color:#fff }
         .btn-secondary { background:#e2e8f0; color:#0f172a }
         table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden }
         th, td { padding:10px; border-bottom:1px solid #e2e8f0; text-align:left }
     </style>
-</head>
-<body>
+
     <div class="page">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div>
                 <h1 style="margin:0">Kelola Divisi</h1>
                 <p style="margin:6px 0 0;color:#64748b">Tambahkan, ubah, atau hapus divisi.</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Kembali ke Dashboard</a>
         </div>
 
         @if(session('success'))
@@ -86,5 +81,5 @@
             <div style="margin-top:12px">{{ $divisis->links() }}</div>
         </div>
     </div>
-</body>
-</html>
+
+@endsection

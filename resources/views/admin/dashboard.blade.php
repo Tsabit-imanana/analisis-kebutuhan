@@ -1,59 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite(['resources/css/dashboard.css'])
-    <title>Admin Dashboard</title>
-</head>
-<body>
-    @extends('layout.sidebar')
+@extends('layout.sidebar')
 
-    @section('title', 'Dashboard - MUMS')
+@section('title', 'Dashboard - MUMS')
 
-    @section('content')
+@section('content')
     @vite(['resources/css/dashboard.css'])
 
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1>Dashboard</h1>
-            <p>Selamat datang di website PT. MUMS</p>
+            <p>Ringkasan data dari seluruh menu utama.</p>
         </div>
 
-        <div class="stats-row top-stats">
+        <h2 class="section-title">Ringkasan Umum</h2>
+        <div class="stats-row four-stats">
             <div class="stat-card">
                 <span class="stat-title">Jumlah Pengguna</span>
-                <span class="stat-value">69</span> {{-- Kurang Backend --}}
+                <span class="stat-value">{{ $userCount ?? 0 }}</span>
             </div>
             <div class="stat-card">
                 <span class="stat-title">Jumlah Divisi</span>
-                <span class="stat-value">5</span> {{-- Kurang Backend --}}
+                <span class="stat-value">{{ $divisiCount ?? 0 }}</span>
             </div>
             <div class="stat-card">
-                <span class="stat-title">Task Selesai</span>
-                <span class="stat-value">113</span> {{-- Kurang Backend --}}
+                <span class="stat-title">Total Task</span>
+                <span class="stat-value">{{ $taskTotal ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Total Weekly Log</span>
+                <span class="stat-value">{{ $weeklyTotal ?? 0 }}</span>
             </div>
         </div>
 
-        <div class="stats-row middle-stats">
+        <h2 class="section-title">Status Task</h2>
+        <div class="stats-row five-stats">
             <div class="stat-card">
-                <span class="stat-title">Total Pengeluaran</span>
-                <span class="stat-value">Rp 12.753.897.655</span> {{-- Kurang Backend --}}
+                <span class="stat-title">Todo</span>
+                <span class="stat-value">{{ $taskStatusCounts['todo'] ?? 0 }}</span>
             </div>
+            <div class="stat-card">
+                <span class="stat-title">On Progress</span>
+                <span class="stat-value">{{ $taskStatusCounts['on_progress'] ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Submitted</span>
+                <span class="stat-value">{{ $taskStatusCounts['submitted'] ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Accepted</span>
+                <span class="stat-value">{{ $taskStatusCounts['accepted'] ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Rejected</span>
+                <span class="stat-value">{{ $taskStatusCounts['rejected'] ?? 0 }}</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Weekly Log</h2>
+        <div class="stats-row three-stats">
+            <div class="stat-card">
+                <span class="stat-title">Total Log</span>
+                <span class="stat-value">{{ $weeklyTotal ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Belum Dikonfirmasi</span>
+                <span class="stat-value">{{ $weeklyPending ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Sudah Dikonfirmasi</span>
+                <span class="stat-value">{{ $weeklyConfirmed ?? 0 }}</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Finance Budgeting</h2>
+        <div class="stats-row four-stats">
             <div class="stat-card">
                 <span class="stat-title">Total Budget</span>
-                <span class="stat-value">Rp 20.967.412.33</span> {{-- Kurang Backend --}}
+                <span class="stat-value">Rp {{ number_format($totalBudget ?? 0, 0, ',', '.') }}</span>
             </div>
-        </div>
-
-        <div class="stats-row bottom-stats">
-            <div class="stat-card empty-card">
-                {{-- Menunggu Thor --}}
+            <div class="stat-card">
+                <span class="stat-title">Total Realisasi</span>
+                <span class="stat-value">Rp {{ number_format($totalRealized ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Sisa Anggaran</span>
+                <span class="stat-value">Rp {{ number_format($remainingBudget ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">% Realisasi</span>
+                <span class="stat-value">{{ $realizedPercentage ?? 0 }}%</span>
             </div>
         </div>
     </div>
-    @endsection
-    <a href="{{ route('finance.index') }}">View Finance</a>
-</body>
-</html>
+@endsection

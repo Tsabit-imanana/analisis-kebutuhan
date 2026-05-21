@@ -26,6 +26,8 @@ class StoreweeklyLogRequest extends FormRequest
             's_date' => 'required|date',
             'f_date' => 'required|date|after_or_equal:s_date',
             'logged_by' => 'required|exists:users,id',
+            'divisi_id' => 'nullable|exists:divisis,id',
+            'status' => 'sometimes|in:pending,confirmed',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'notes' => 'nullable|string',

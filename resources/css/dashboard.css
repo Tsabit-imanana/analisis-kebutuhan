@@ -40,6 +40,18 @@ body {
     grid-template-columns: repeat(2, 1fr);
 }
 
+.three-stats {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.four-stats {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.five-stats {
+    grid-template-columns: repeat(5, 1fr);
+}
+
 .bottom-stats {
     grid-template-columns: 1fr;
 }
@@ -72,14 +84,28 @@ body {
     min-height: 300px;
 }
 
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 12px 0;
+}
+
 @media (max-width: 1024px) {
-    .top-stats {
+    .top-stats,
+    .three-stats,
+    .four-stats,
+    .five-stats {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .top-stats, .middle-stats {
+    .top-stats,
+    .middle-stats,
+    .three-stats,
+    .four-stats,
+    .five-stats {
         grid-template-columns: 1fr;
     }
     .dashboard-container {

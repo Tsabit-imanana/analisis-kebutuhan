@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite(['resources/css/weekly_log/index.css'])
-    <title>Weekly Log</title>
-</head>
-<body>
-    @extends('layout.sidebar')
+@extends('layout.sidebar')
 
-    @section('title', 'Weekly Log - MUMS')
+@section('title', 'Weekly Log - MUMS')
 
-    @section('content')
+@section('content')
     @vite(['resources/css/weekly_log/index.css'])
 
     <div class="weekly-container">
@@ -29,16 +19,16 @@
 
         <div class="summary-cards">
             <div class="card">
-                <span class="card-title">Jumlah Log Diajukan</span>
-                <span class="card-value">210</span> {{-- Kurang Backend --}}
+                <span class="card-title">Jumlah Total Log</span>
+                <span class="card-value">{{ $totalLogs ?? 0 }}</span>
             </div>
             <div class="card">
-                <span class="card-title">Jumlah Agenda Selesai</span>
-                <span class="card-value">1028</span> {{-- Kurang Backend --}}
+                <span class="card-title">Jumlah Log Belum Dikonfirmasi</span>
+                <span class="card-value">{{ $pendingLogs ?? 0 }}</span>
             </div>
             <div class="card">
-                <span class="card-title">Jumlah Aktivitas</span>
-                <span class="card-value">537</span> {{-- Kurang Backend --}}
+                <span class="card-title">Jumlah Log Sudah Dikonfirmasi</span>
+                <span class="card-value">{{ $confirmedLogs ?? 0 }}</span>
             </div>
         </div>
 
@@ -66,6 +56,8 @@
                                 <th>Start Date</th>
                                 <th>Finish Date</th>
                                 <th>Logged By</th>
+                                <th>Divisi</th>
+                                <th>Status</th>
                                 <th>Title</th>
                                 <th>Description</th>
                                 <th>Notes</th>
@@ -74,64 +66,101 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($weeklyLogs as $log)
-                                <tr>
-                                    <td>{{ $log->s_date }}</td>
-                                    <td>{{ $log->f_date }}</td>
-                                    <td>{{ $log->loggedBy->name ?? $log->logged_by }}</td>
-                                    <td>{{ $log->title }}</td>
-                                    <td>{{ $log->description }}</td>
-                                    <td>{{ $log->notes }}</td>
-                                    <td>
-                                        @if ($log->photo)
-                                            <img src="{{ $log->photo }}" alt="Foto Weekly Log" class="table-img" onerror="this.outerHTML='<span style=\'color:red;\'>Error: Foto tidak bisa dimuat</span>';" />
-                                        @else
-                                            <span class="text-muted">Tidak ada foto.</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="aksi-cell">
-                                            <button type="button" class="btn-icon"
-                                                onclick="openEditModal(this)"
-                                                data-id="{{ $log->id }}"
-                                                data-s-date="{{ $log->s_date }}"
-                                                data-f-date="{{ $log->f_date }}"
-                                                data-logged-by="{{ $log->logged_by }}"
-                                                data-title="{{ htmlspecialchars($log->title, ENT_QUOTES, 'UTF-8') }}"
-                                                data-description="{{ htmlspecialchars($log->description, ENT_QUOTES, 'UTF-8') }}"
-                                                data-notes="{{ htmlspecialchars($log->notes, ENT_QUOTES, 'UTF-8') }}"
-                                            >
-                                                <svg
-                                                    width="18"
-                                                    height="18"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round">
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                                </svg>
-                                            </button>
+                            @php
+                                $weeklyLogsByDivisi = $weeklyLogs->groupBy(function ($log) {
+                                    return $log->divisi_id ?? $log->loggedBy?->divisi_id ?? 'none';
+                                });
+                            @endphp
 
-                                            <button type="button" class="btn-icon" onclick="openDeleteModal('{{ route('weekly_log.destroy', $log->id) }}')">
-                                                <svg
-                                                    width="18"
-                                                    height="18"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round">
-                                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
+                            @foreach ($weeklyLogsByDivisi as $divisiKey => $logs)
+                                @php
+                                    $firstLog = $logs->first();
+                                    $divisiName = '-';
+                                    if ($divisiKey === 'none') {
+                                        $divisiName = 'Tanpa Divisi';
+                                    } else {
+                                        $divisiName = $firstLog?->divisi?->nama_divisi
+                                            ?? $firstLog?->loggedBy?->divisi?->nama_divisi
+                                            ?? ('Divisi #' . $divisiKey);
+                                    }
+                                @endphp
+
+                                <tr class="divisi-header">
+                                    <td colspan="10">
+                                        {{ $divisiName }}
+                                        <span class="divisi-count">({{ $logs->count() }} log)</span>
                                     </td>
                                 </tr>
+
+                                @foreach ($logs as $log)
+                                    <tr>
+                                        <td>{{ $log->s_date }}</td>
+                                        <td>{{ $log->f_date }}</td>
+                                        <td>{{ $log->loggedBy->name ?? $log->logged_by }}</td>
+                                        <td>{{ $log->divisi->nama_divisi ?? $log->loggedBy?->divisi?->nama_divisi ?? '-' }}</td>
+                                        <td>
+                                            @php
+                                                $status = $log->status ?? 'pending';
+                                            @endphp
+                                            <span class="status-badge status-badge--{{ $status }}">
+                                                {{ $status === 'confirmed' ? 'Confirmed' : 'Pending' }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $log->title }}</td>
+                                        <td>{{ $log->description }}</td>
+                                        <td>{{ $log->notes }}</td>
+                                        <td>
+                                            @if ($log->photo)
+                                                <img src="{{ $log->photo }}" alt="Foto Weekly Log" class="table-img" onerror="this.outerHTML='<span style=\'color:red;\'>Error: Foto tidak bisa dimuat</span>';" />
+                                            @else
+                                                <span class="text-muted">Tidak ada foto.</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="aksi-cell">
+                                                <button type="button" class="btn-icon"
+                                                    onclick="openEditModal(this)"
+                                                    data-id="{{ $log->id }}"
+                                                    data-s-date="{{ $log->s_date }}"
+                                                    data-f-date="{{ $log->f_date }}"
+                                                    data-logged-by="{{ $log->logged_by }}"
+                                                    data-status="{{ $log->status ?? 'pending' }}"
+                                                    data-title="{{ htmlspecialchars($log->title, ENT_QUOTES, 'UTF-8') }}"
+                                                    data-description="{{ htmlspecialchars($log->description, ENT_QUOTES, 'UTF-8') }}"
+                                                    data-notes="{{ htmlspecialchars($log->notes, ENT_QUOTES, 'UTF-8') }}"
+                                                >
+                                                    <svg
+                                                        width="18"
+                                                        height="18"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                    </svg>
+                                                </button>
+
+                                                <button type="button" class="btn-icon" onclick="openDeleteModal('{{ route('weekly_log.destroy', $log->id) }}')">
+                                                    <svg
+                                                        width="18"
+                                                        height="18"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             @endforeach
                         </tbody>
                     </table>
@@ -173,6 +202,14 @@
                     </select><br>
                 @endauth
 
+                <label>Divisi</label><br>
+                <select name="divisi_id" class="form-control">
+                    <option value="">-- Pilih Divisi --</option>
+                    @foreach ($divisis as $divisi)
+                        <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                    @endforeach
+                </select><br>
+
                 <label>Title</label><br>
                 <input type="text" name="title" required class="form-control"><br>
 
@@ -209,6 +246,12 @@
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                     @endforeach
+                </select><br>
+
+                <label>Status</label><br>
+                <select name="status" id="edit_status" class="form-control">
+                    <option value="pending">Pending (Belum dikonfirmasi)</option>
+                    <option value="confirmed">Confirmed (Sudah dikonfirmasi)</option>
                 </select><br>
 
                 <label>Title</label><br>
@@ -274,6 +317,7 @@
             document.getElementById('edit_s_date').value = button.dataset.sDate;
             document.getElementById('edit_f_date').value = button.dataset.fDate;
             document.getElementById('edit_logged_by').value = button.dataset.loggedBy;
+            document.getElementById('edit_status').value = button.dataset.status || 'pending';
             document.getElementById('edit_title').value = button.dataset.title || '';
             document.getElementById('edit_description').value = button.dataset.description || '';
             document.getElementById('edit_notes').value = button.dataset.notes || '';
@@ -307,6 +351,4 @@
             }
         });
     </script>
-    @endsection
-</body>
-</html>
+@endsection

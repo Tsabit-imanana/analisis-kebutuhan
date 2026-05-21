@@ -3,399 +3,123 @@
 @section('title', 'Finance Detail - MUMS')
 
 @section('content')
-    <style>
-        .finance-page * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+@vite(['resources/css/dashboard.css', 'resources/css/finance.css'])
 
-        .finance-page {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            min-height: calc(100vh - 40px);
-        }
-
-        .finance-page .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .finance-page .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #007bff;
-        }
-
-        .finance-page .header h1 {
-            color: #333;
-        }
-
-        .finance-page .header p {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .finance-page .btn {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s;
-        }
-
-        .finance-page .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .finance-page .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .finance-page .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .finance-page .btn-secondary:hover {
-            background-color: #545b62;
-        }
-
-        .finance-page .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        .finance-page .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .finance-page .summary-section {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .finance-page .summary-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .finance-page .summary-card.budget {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .finance-page .summary-card.realisasi {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .finance-page .summary-card.sisa {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .finance-page .summary-card.percentage {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .finance-page .summary-card h3 {
-            font-size: 12px;
-            font-weight: 600;
-            opacity: 0.9;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .finance-page .summary-card .amount {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .finance-page h2 {
-            color: #333;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #007bff;
-        }
-
-        .finance-page table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-
-        .finance-page thead {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .finance-page th {
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .finance-page td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .finance-page tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        .finance-page tbody tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        .finance-page .currency {
-            text-align: right;
-        }
-
-        .finance-page .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-            border: 1px dashed #ddd;
-        }
-
-        .finance-page .back-link {
-            display: inline-block;
-            padding: 8px 12px;
-            background-color: #ddd;
-            color: #000;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .finance-page .back-link:hover {
-            background-color: #bbb;
-        }
-
-        .finance-page .photo {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .finance-page .photo:hover {
-            opacity: 0.8;
-        }
-
-        .finance-page .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .finance-page .modal-image {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-            margin-top: 50px;
-            max-height: 70vh;
-            border-radius: 8px;
-        }
-
-        .finance-page .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .finance-page .close-modal:hover {
-            color: #bbb;
-        }
-
-        .finance-page .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-
-        .finance-page .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .finance-page .info-item {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 4px;
-            border-left: 4px solid #007bff;
-        }
-
-        .finance-page .info-item label {
-            font-weight: bold;
-            color: #555;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .finance-page .info-item p {
-            color: #333;
-            font-size: 16px;
-        }
-    </style>
-
-    <div class="finance-page">
-    <div class="container">
-        <div class="header">
-            <div>
-                <h1>Finance Detail</h1>
-                <p>{{ $periode->bulan->bulan }} {{ $periode->tahun->tahun }} - {{ $periode->divisi->nama_divisi }}</p>
-            </div>
-            <a href="{{ route('finance.index') }}" class="back-link">← Back to Finance</a>
+<div class="dashboard-container finance-container">
+    <div class="dashboard-header finance-header">
+        <div>
+            <h1>Finance Detail</h1>
+            <p>{{ $periode->bulan->bulan }} {{ $periode->tahun->tahun }} - {{ $periode->divisi->nama_divisi }}</p>
         </div>
-
-        <!-- Summary Cards -->
-        <div class="summary-section">
-            <div class="summary-card budget">
-                <h3>Total Budget</h3>
-                <div class="amount">Rp{{ number_format($totalBudget, 0, ',', '.') }}</div>
-            </div>
-            <div class="summary-card realisasi">
-                <h3>Total Realisasi</h3>
-                <div class="amount">Rp{{ number_format($totalRealized, 0, ',', '.') }}</div>
-            </div>
-            <div class="summary-card sisa">
-                <h3>Sisa Anggaran</h3>
-                <div class="amount">Rp{{ number_format($remaining, 0, ',', '.') }}</div>
-            </div>
-            <div class="summary-card percentage">
-                <h3>% Realisasi</h3>
-                <div class="amount">{{ $totalBudget > 0 ? round(($totalRealized / $totalBudget) * 100, 2) : 0 }}%</div>
-            </div>
+        <div class="finance-toolbar">
+            <a href="{{ route('finance.index') }}" class="finance-btn finance-btn--secondary">← Back to Finance</a>
         </div>
-
-        <!-- Period Information -->
-        <div class="info-grid">
-            <div class="info-item">
-                <label>Periode</label>
-                <p>{{ $periode->bulan->bulan }} {{ $periode->tahun->tahun }}</p>
-            </div>
-            <div class="info-item">
-                <label>Divisi</label>
-                <p>{{ $periode->divisi->nama_divisi }}</p>
-            </div>
-        </div>
-
-        <!-- Budget Section -->
-        <h2>Daftar Budget</h2>
-        @if($budgets->isEmpty())
-            <div class="empty-state">
-                <p>Tidak ada data budget untuk periode ini.</p>
-            </div>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Jumlah Budget</th>
-                        <th>Tanggal Input</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($budgets as $index => $budget)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td class="currency">
-                                <strong>Rp{{ number_format($budget->jumlah_budget, 0, ',', '.') }}</strong>
-                            </td>
-                            <td>{{ $budget->created_at->format('d/m/Y H:i') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-
-        <!-- Detail Laporan Section -->
-        <h2>Detail Realisasi Anggaran</h2>
-        @if($details->isEmpty())
-            <div class="empty-state">
-                <p>Tidak ada data detail laporan untuk periode ini.</p>
-            </div>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>PIC</th>
-                        <th>Kegiatan</th>
-                        <th>Deskripsi</th>
-                        <th>Jumlah Anggaran</th>
-                        <th>Bukti Foto</th>
-                        <th>Tanggal Input</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($details as $index => $detail)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $detail->user->name ?? '-' }}</td>
-                            <td>
-                                <strong>{{ $detail->kegiatan }}</strong>
-                            </td>
-                            <td>{{ substr($detail->deskripsi, 0, 50) }}{{ strlen($detail->deskripsi) > 50 ? '...' : '' }}</td>
-                            <td class="currency">
-                                <strong>Rp{{ number_format($detail->jumlah_anggaran, 0, ',', '.') }}</strong>
-                            </td>
-                            <td>
-                                @if ($detail->bukti_foto)
-                                    <img src="{{ asset('storage/' . $detail->bukti_foto) }}" 
-                                         alt="Bukti Foto" 
-                                         class="photo" 
-                                         onclick="openModal(this.src)">
-                                @else
-                                    <span style="color: #999;">Tidak ada foto</span>
-                                @endif
-                            </td>
-                            <td>{{ $detail->created_at->format('d/m/Y H:i') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
     </div>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="modal">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <img class="modal-image" id="modalImage" src="" alt="Preview">
+    <div class="stats-row finance-summary">
+        <div class="stat-card finance-card">
+            <span class="stat-title">Total Budget</span>
+            <span class="stat-value">Rp{{ number_format($totalBudget, 0, ',', '.') }}</span>
+        </div>
+        <div class="stat-card finance-card">
+            <span class="stat-title">Total Realisasi</span>
+            <span class="stat-value">Rp{{ number_format($totalRealized, 0, ',', '.') }}</span>
+        </div>
+        <div class="stat-card finance-card">
+            <span class="stat-title">Sisa Anggaran</span>
+            <span class="stat-value">Rp{{ number_format($remaining, 0, ',', '.') }}</span>
+        </div>
+        <div class="stat-card finance-card">
+            <span class="stat-title">% Realisasi</span>
+            <span class="stat-value">{{ $totalBudget > 0 ? round(($totalRealized / $totalBudget) * 100, 2) : 0 }}%</span>
+        </div>
+    </div>
+
+    <div class="finance-info-grid">
+        <div class="finance-info-item">
+            <label>Periode</label>
+            <p>{{ $periode->bulan->bulan }} {{ $periode->tahun->tahun }}</p>
+        </div>
+        <div class="finance-info-item">
+            <label>Divisi</label>
+            <p>{{ $periode->divisi->nama_divisi }}</p>
+        </div>
+    </div>
+
+    <h2 style="margin:16px 0 10px 0; font-size:18px;">Daftar Budget</h2>
+    @if($budgets->isEmpty())
+        <div class="stat-card finance-card">
+            <div class="finance-empty">Tidak ada data budget untuk periode ini.</div>
+        </div>
+    @else
+        <table class="finance-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Jumlah Budget</th>
+                    <th>Tanggal Input</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($budgets as $index => $budget)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td class="currency">Rp{{ number_format($budget->jumlah_budget, 0, ',', '.') }}</td>
+                        <td>{{ $budget->created_at->format('d/m/Y H:i') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+    <h2 style="margin:16px 0 10px 0; font-size:18px;">Detail Realisasi Anggaran</h2>
+    @if($details->isEmpty())
+        <div class="stat-card finance-card">
+            <div class="finance-empty">Tidak ada data detail laporan untuk periode ini.</div>
+        </div>
+    @else
+        <table class="finance-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>PIC</th>
+                    <th>Kegiatan</th>
+                    <th>Deskripsi</th>
+                    <th>Jumlah Anggaran</th>
+                    <th>Bukti Foto</th>
+                    <th>Tanggal Input</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($details as $index => $detail)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $detail->user->name ?? '-' }}</td>
+                        <td><strong>{{ $detail->kegiatan }}</strong></td>
+                        <td>{{ substr($detail->deskripsi, 0, 50) }}{{ strlen($detail->deskripsi) > 50 ? '...' : '' }}</td>
+                        <td class="currency">Rp{{ number_format($detail->jumlah_anggaran, 0, ',', '.') }}</td>
+                        <td>
+                            @if ($detail->bukti_foto)
+                                <img
+                                    src="{{ asset('storage/' . $detail->bukti_foto) }}"
+                                    alt="Bukti Foto"
+                                    class="finance-photo"
+                                    onclick="openModal(this.src)"
+                                >
+                            @else
+                                <span style="color:#64748b;">Tidak ada foto</span>
+                            @endif
+                        </td>
+                        <td>{{ $detail->created_at->format('d/m/Y H:i') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+    <div id="imageModal" class="finance-image-modal">
+        <span class="finance-image-modal__close" onclick="closeModal()">&times;</span>
+        <img class="finance-image-modal__img" id="modalImage" src="" alt="Preview">
     </div>
 
     <script>
@@ -415,6 +139,5 @@
             }
         };
     </script>
-    </div>
-    </div>
+</div>
 @endsection
