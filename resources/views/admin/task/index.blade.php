@@ -3,55 +3,7 @@
 @section('title', 'Task Management - MUMS')
 
 @section('content')
-@vite(['resources/css/dashboard.css'])
-
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        background: #ffffff;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    th, td {
-        border: 1px solid #e2e8f0;
-        padding: 10px;
-    }
-    thead th {
-        background: #f8fafc;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-    }
-
-    .modal-content {
-        background: #fff;
-        padding: 20px;
-        width: 420px;
-        margin: 100px auto;
-        border-radius: 12px;
-    }
-
-    .task-stats {
-        grid-template-columns: repeat(5, 1fr);
-    }
-
-    @media (max-width: 1024px) {
-        .task-stats { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 768px) {
-        .task-stats { grid-template-columns: 1fr; }
-        .modal-content { width: calc(100% - 32px); margin: 64px auto; }
-    }
-</style>
+@vite(['resources/css/dashboard.css', 'resources/css/task/index.css'])
 
 <div class="dashboard-container">
     <div class="dashboard-header">

@@ -9,12 +9,16 @@
     background-color: #f9f9f9;
     border-right: 1px solid #ddd;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .logo {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
+    margin-top: 20px;
+    padding-left: 10px;
 }
 
 .logo-img {
@@ -25,8 +29,15 @@
 
 .logo-text {
     font-family: 'Inter', sans-serif;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    font-weight: medium;
 }
 
 .menu ul {
@@ -35,31 +46,54 @@
     margin: 0;
 }
 
+.menu .menu-bottom {
+    margin-top: 0;
+    padding-top: 24px;
+}
+
+.sidebar-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
 .menu ul li {
     margin: 12px 0;
 }
 
-.menu ul li a {
+.menu ul li a,
+.menu-logout-button {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #333;
+    color: #000000;
     font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
 }
 
-.menu ul li a i {
-    margin-right: 8px;
-    font-size: 16px;
+.menu ul li a:hover,
+.menu-logout-button:hover {
+    background-color: #93C5FD;
+    color: #1E3A8A;
 }
 
-.menu ul li a:hover {
-    color: #1abc9c;
+.menu ul li a.active,
+.menu-logout-button.active {
+    background-color: #1E3A8A;
+    color: #fff;
 }
 
 .menu-bottom {
-    margin-top: 40px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
+    margin-top: auto;
+    padding-top: 40px;
 }
 
 .main-content {

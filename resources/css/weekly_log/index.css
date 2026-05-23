@@ -240,6 +240,13 @@ body {
     box-sizing: border-box;
 }
 
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+}
+
 .table-controls {
     display: flex;
     align-items: center;
