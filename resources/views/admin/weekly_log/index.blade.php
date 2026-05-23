@@ -117,7 +117,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="aksi-cell">
+                                            <div class="action-cell">
                                                 <button type="button" class="btn-icon"
                                                     onclick="openEditModal(this)"
                                                     data-id="{{ $log->id }}"
