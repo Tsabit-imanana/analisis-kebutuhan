@@ -23,7 +23,7 @@ class DivisiController extends Controller
 
         $divisis = $query->orderBy('nama_divisi')->paginate(12)->withQueryString();
 
-        return view('admin.settings.divisi.index', compact('divisis', 'search'));
+        return view('admin.settings.index', compact('divisis', 'search'));
     }
 
     /**
@@ -31,7 +31,7 @@ class DivisiController extends Controller
      */
     public function create()
     {
-        return view('admin.settings.divisi.create');
+        return view('admin.settings.create');
     }
 
     /**
@@ -42,7 +42,7 @@ class DivisiController extends Controller
         $data = $request->validated();
         divisi::create($data);
 
-        return Redirect::route('settings.divisi.index')->with('success', 'Divisi berhasil ditambahkan.');
+        return Redirect::route('settings.index')->with('success', 'Divisi berhasil ditambahkan.');
     }
 
     /**
@@ -50,7 +50,7 @@ class DivisiController extends Controller
      */
     public function show(divisi $divisi)
     {
-        return view('admin.settings.divisi.show', compact('divisi'));
+        return view('admin.settings.show', compact('divisi'));
     }
 
     /**
@@ -58,7 +58,7 @@ class DivisiController extends Controller
      */
     public function edit(divisi $divisi)
     {
-        return view('admin.settings.divisi.edit', compact('divisi'));
+        return view('admin.settings.edit', compact('divisi'));
     }
 
     /**
@@ -69,7 +69,7 @@ class DivisiController extends Controller
         $data = $request->validated();
         $divisi->update($data);
 
-        return Redirect::route('settings.divisi.index')->with('success', 'Divisi berhasil diperbarui.');
+        return Redirect::route('settings.index')->with('success', 'Divisi berhasil diperbarui.');
     }
 
     /**
@@ -84,6 +84,6 @@ class DivisiController extends Controller
 
         $divisi->delete();
 
-        return Redirect::route('settings.divisi.index')->with('success', 'Divisi berhasil dihapus.');
+        return Redirect::route('settings.index')->with('success', 'Divisi berhasil dihapus.');
     }
 }

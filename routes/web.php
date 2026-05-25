@@ -89,14 +89,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/periode-laporan', [PeriodeLaporanController::class, 'store']);
 
         // Settings: Divisi CRUD
-        Route::prefix('settings/divisi')->name('settings.divisi.')->group(function () {
+        Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [DivisiController::class, 'index'])->name('index');
             Route::post('/', [DivisiController::class, 'store'])->name('store');
-            Route::get('/create', [DivisiController::class, 'create'])->name('create');
-            Route::get('/{divisi}/edit', [DivisiController::class, 'edit'])->name('edit');
             Route::put('/{divisi}', [DivisiController::class, 'update'])->name('update');
             Route::delete('/{divisi}', [DivisiController::class, 'destroy'])->name('destroy');
-            Route::get('/{divisi}', [DivisiController::class, 'show'])->name('show');
         });
     });
 });
