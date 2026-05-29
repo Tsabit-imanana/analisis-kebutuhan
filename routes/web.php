@@ -9,6 +9,8 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\PeriodeLaporanController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DocumentController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -55,6 +57,11 @@ Route::middleware('auth')->group(function () {
         return view('employee.dashboard');
     })->name('employee.dashboard');
 
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
+
     Route::prefix('tasks')->name('tasks.')->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('index');
         Route::post('/', [TaskController::class, 'addTask'])->name('store');
@@ -77,6 +84,13 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [WeeklyLogController::class, 'store'])->name('store');
             Route::put('/{id}', [WeeklyLogController::class, 'update'])->name('update');
             Route::delete('/{id}', [WeeklyLogController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('document')->name('document.')->group(function () {
+            Route::get('/', [DocumentController::class, 'index'])->name('index');
+            Route::post('/', [DocumentController::class, 'store'])->name('store');
+            Route::put('/{id}', [DocumentController::class, 'update'])->name('update');
+            Route::delete('/{id}', [DocumentController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('finance')->name('finance.')->group(function () {
