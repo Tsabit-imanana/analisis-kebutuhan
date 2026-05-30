@@ -117,7 +117,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="aksi-cell">
+                                            <div class="action-cell">
                                                 <button type="button" class="btn-icon"
                                                     onclick="openEditModal(this)"
                                                     data-id="{{ $log->id }}"
@@ -222,8 +222,10 @@
                 <label>Photo</label><br>
                 <input type="file" name="photo" accept="image/*" class="form-control"><br><br> {{-- Butuh image adjustment --}}
 
-                <button type="submit" class="btn-dark">Simpan</button>
-                <button type="button" class="btn-light" onclick="closeAddModal()">Batal</button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-dark">Simpan</button>
+                    <button type="button" class="btn-light" onclick="closeAddModal()">Batal</button>
+                </div>
             </form>
         </div>
     </div>
@@ -266,8 +268,10 @@
                 <label>Photo (Kosongkan jika tidak diubah)</label><br>
                 <input type="file" name="photo" accept="image/*" class="form-control"><br><br> {{-- Butuh image adjustment --}}
 
-                <button type="submit" class="btn-dark">Update</button>
-                <button type="button" class="btn-light" onclick="closeEditModal()">Batal</button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-dark">Simpan</button>
+                    <button type="button" class="btn-light" onclick="closeEditModal()">Batal</button>
+                </div>
             </form>
         </div>
     </div>

@@ -56,6 +56,11 @@ Route::middleware('auth')->group(function () {
         return view('employee.dashboard');
     })->name('employee.dashboard');
 
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
+
     Route::prefix('tasks')->name('tasks.')->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('index');
         Route::post('/', [TaskController::class, 'addTask'])->name('store');
@@ -80,6 +85,13 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [WeeklyLogController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('document')->name('document.')->group(function () {
+            Route::get('/', [DocumentController::class, 'index'])->name('index');
+            Route::post('/', [DocumentController::class, 'store'])->name('store');
+            Route::put('/{id}', [DocumentController::class, 'update'])->name('update');
+            Route::delete('/{id}', [DocumentController::class, 'destroy'])->name('destroy');
+        });
+
         Route::prefix('finance')->name('finance.')->group(function () {
             Route::get('/', [FinanceController::class, 'index'])->name('index');
             Route::get('/{id}', [FinanceController::class, 'show'])->name('show');
@@ -90,14 +102,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/periode-laporan', [PeriodeLaporanController::class, 'store']);
 
         // Settings: Divisi CRUD
-        Route::prefix('settings/divisi')->name('settings.divisi.')->group(function () {
+        Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [DivisiController::class, 'index'])->name('index');
             Route::post('/', [DivisiController::class, 'store'])->name('store');
-            Route::get('/create', [DivisiController::class, 'create'])->name('create');
-            Route::get('/{divisi}/edit', [DivisiController::class, 'edit'])->name('edit');
             Route::put('/{divisi}', [DivisiController::class, 'update'])->name('update');
             Route::delete('/{divisi}', [DivisiController::class, 'destroy'])->name('destroy');
-            Route::get('/{divisi}', [DivisiController::class, 'show'])->name('show');
         });
     });
 

@@ -11,7 +11,7 @@
     <div class="login-container">
         <div class="login-box">
             <div class="logo">
-                <div class="logo-mark">M</div>
+                <img src="{{ asset('images/logo.svg') }}" alt="Logo MUMS" class="logo-img">
                 <div>
                     <p class="logo-subtitle">PT. MUMS</p>
                     <h1 class="logo-text">Multi Role Login</h1>
@@ -20,11 +20,11 @@
             <p class="login-description">Masuk menggunakan email dan password sesuai role akun Anda.</p>
 
             @if (session('error'))
-                <div class="alert alert-error">{{ session('error') }}</div>
+                <div id="alert" class="alert alert-error">{{ session('error') }}</div>
             @endif
 
             @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
+                <div id="alert" class="alert alert-success">{{ session('success') }}</div>
             @endif
 
             <form method="POST" action="{{ route('login.attempt') }}">
@@ -52,5 +52,14 @@
             </form>
         </div>
     </div>
+
+    <script>
+        setTimeout(() => {
+            const alert = document.getElementById('alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
