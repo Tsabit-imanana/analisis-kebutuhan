@@ -11,7 +11,7 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-                <img src="..." alt="Logo MUMS" class="logo-img"> {{-- Logo MUMS --}}
+                <img src="{{ asset('images/logo.svg') }}" alt="Logo MUMS" class="logo-img">
                 <h1 class="logo-text">MUMS</h1>
             </div>
 

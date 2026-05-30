@@ -11,6 +11,7 @@ use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\SpvDashboardController;
+use App\Http\Controllers\EmployeeDashboardController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -52,9 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/spv/dashboard', [SpvDashboardController::class, 'index'])
         ->name('spv.dashboard');
 
-    Route::get('/employee/dashboard', function () {
-        return view('employee.dashboard');
-    })->name('employee.dashboard');
+    Route::get('/employee/dashboard', [EmployeeDashboardController::class, 'index'])
+        ->name('employee.dashboard');
 
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
@@ -71,19 +71,35 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/review', [TaskController::class, 'reviewTask'])->name('review');
     });
 
+    Route::prefix('weekly_log')->name('weekly_log.')->group(function () {
+        Route::get('/', [WeeklyLogController::class, 'index'])->name('index');
+        Route::post('/', [WeeklyLogController::class, 'store'])->name('store');
+        Route::put('/{id}', [WeeklyLogController::class, 'update'])->name('update');
+        Route::delete('/{id}', [WeeklyLogController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('employee/weekly-log')->name('employee.weekly_log.')->group(function () {
+        Route::get('/', [WeeklyLogController::class, 'employeeIndex'])->name('index');
+        Route::post('/', [WeeklyLogController::class, 'employeeStore'])->name('store');
+        Route::put('/{id}', [WeeklyLogController::class, 'employeeUpdate'])->name('update');
+        Route::delete('/{id}', [WeeklyLogController::class, 'employeeDestroy'])->name('destroy');
+    });
+
+    Route::prefix('finance')->name('finance.')->group(function () {
+        Route::get('/', [FinanceController::class, 'index'])->name('index');
+        Route::get('/{id}', [FinanceController::class, 'show'])->name('show');
+        Route::post('/budget', [FinanceController::class, 'storeBudget'])->name('budget.store');
+        Route::post('/detail', [FinanceController::class, 'storeDetail'])->name('detail.store');
+    });
+
+    Route::post('/periode-laporan', [PeriodeLaporanController::class, 'store']);
+
     Route::middleware('admin')->group(function () {
         Route::get('/role-management', [RoleManagementController::class, 'index'])->name('admin.users.index');
         Route::post('/role-management', [RoleManagementController::class, 'store'])->name('admin.users.store');
         Route::get('/role-management/{user}/edit', [RoleManagementController::class, 'edit'])->name('admin.users.edit');
         Route::put('/role-management/{user}', [RoleManagementController::class, 'update'])->name('admin.users.update');
         Route::delete('/role-management/{user}', [RoleManagementController::class, 'destroy'])->name('admin.users.destroy');
-
-        Route::prefix('weekly_log')->name('weekly_log.')->group(function () {
-            Route::get('/', [WeeklyLogController::class, 'index'])->name('index');
-            Route::post('/', [WeeklyLogController::class, 'store'])->name('store');
-            Route::put('/{id}', [WeeklyLogController::class, 'update'])->name('update');
-            Route::delete('/{id}', [WeeklyLogController::class, 'destroy'])->name('destroy');
-        });
 
         Route::prefix('document')->name('document.')->group(function () {
             Route::get('/', [DocumentController::class, 'index'])->name('index');
@@ -92,14 +108,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [DocumentController::class, 'destroy'])->name('destroy');
         });
 
-        Route::prefix('finance')->name('finance.')->group(function () {
-            Route::get('/', [FinanceController::class, 'index'])->name('index');
-            Route::get('/{id}', [FinanceController::class, 'show'])->name('show');
-            Route::post('/budget', [FinanceController::class, 'storeBudget'])->name('budget.store');
-            Route::post('/detail', [FinanceController::class, 'storeDetail'])->name('detail.store');
-        });
-
-        Route::post('/periode-laporan', [PeriodeLaporanController::class, 'store']);
+        
 
         // Settings: Divisi CRUD
         Route::prefix('settings')->name('settings.')->group(function () {

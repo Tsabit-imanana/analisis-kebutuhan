@@ -16,7 +16,13 @@ class DocumentController extends Controller
             $query->where('created_by', $user->id);
         }
 
-        return view('admin.documents.index', [
+        $view = match ($user?->role) {
+            'employee' => 'employee.documents.index',
+            'spv' => 'spv.documents.index',
+            default => 'admin.documents.index',
+        };
+
+        return view($view, [
             'documents' => $query->get(),
             'currentRole' => $user?->role,
         ]);
@@ -24,7 +30,14 @@ class DocumentController extends Controller
 
     public function create()
     {
-        return view('admin.documents.create');
+        $user = auth()->user();
+        $view = match ($user?->role) {
+            'employee' => 'employee.documents.create',
+            'spv' => 'spv.documents.create',
+            default => 'admin.documents.create',
+        };
+
+        return view($view);
     }
 
     public function store(Request $request)

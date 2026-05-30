@@ -30,6 +30,27 @@ class WeeklyLogController extends Controller
         ]);
     }
 
+    public function employeeIndex()
+    {
+        $user = auth()->user();
+
+        $weeklyLogs = weeklyLog::with(['loggedBy.divisi', 'divisi'])
+            ->where('logged_by', $user->id)
+            ->orderByDesc('s_date')
+            ->get();
+
+        $totalLogs = $weeklyLogs->count();
+        $pendingLogs = $weeklyLogs->where('status', 'pending')->count();
+        $confirmedLogs = $weeklyLogs->where('status', 'confirmed')->count();
+
+        return view('employee.weekly_log.index', [
+            'weeklyLogs' => $weeklyLogs,
+            'totalLogs' => $totalLogs,
+            'pendingLogs' => $pendingLogs,
+            'confirmedLogs' => $confirmedLogs,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -58,6 +79,28 @@ class WeeklyLogController extends Controller
                 $loggedByDivisiId = User::where('id', $data['logged_by'])->value('divisi_id');
             }
             $data['divisi_id'] = $loggedByDivisiId;
+        }
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('weekly_logs', 'public');
+            $data['photo'] = Storage::url($path);
+        }
+
+        weeklyLog::create($data);
+
+        return redirect()->back()->with('success', 'Weekly log berhasil ditambahkan.');
+    }
+
+    public function employeeStore(StoreweeklyLogRequest $request)
+    {
+        $data = $request->validated();
+        $user = auth()->user();
+
+        $data['logged_by'] = $user->id;
+        $data['status'] = 'pending';
+
+        if (empty($data['divisi_id'])) {
+            $data['divisi_id'] = $user->divisi_id;
         }
 
         if ($request->hasFile('photo')) {
@@ -118,6 +161,36 @@ class WeeklyLogController extends Controller
         return redirect()->back()->with('success', 'Weekly log berhasil diupdate.');
     }
 
+    public function employeeUpdate(UpdateweeklyLogRequest $request, $id)
+    {
+        $user = auth()->user();
+        $weeklyLog = weeklyLog::where('id', $id)
+            ->where('logged_by', $user->id)
+            ->firstOrFail();
+
+        if ($weeklyLog->status === 'confirmed') {
+            return redirect()->back()->with('error', 'Weekly log sudah dikonfirmasi dan tidak bisa diubah.');
+        }
+
+        $data = $request->validated();
+        $data['logged_by'] = $user->id;
+        $data['status'] = 'pending';
+        $data['divisi_id'] = $user->divisi_id;
+
+        if ($request->hasFile('photo')) {
+            if ($weeklyLog->photo) {
+                $photoPath = str_replace('/storage/', '', $weeklyLog->photo);
+                Storage::disk('public')->delete($photoPath);
+            }
+            $path = $request->file('photo')->store('weekly_logs', 'public');
+            $data['photo'] = Storage::url($path);
+        }
+
+        $weeklyLog->update($data);
+
+        return redirect()->back()->with('success', 'Weekly log berhasil diupdate.');
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -129,6 +202,27 @@ class WeeklyLogController extends Controller
                 $photoPath = str_replace('/storage/', '', $weeklyLog->photo);
                 Storage::disk('public')->delete($photoPath);
             }
+        $weeklyLog->delete();
+
+        return redirect()->back()->with('success', 'Weekly log berhasil dihapus.');
+    }
+
+    public function employeeDestroy($id)
+    {
+        $user = auth()->user();
+        $weeklyLog = weeklyLog::where('id', $id)
+            ->where('logged_by', $user->id)
+            ->firstOrFail();
+
+        if ($weeklyLog->status === 'confirmed') {
+            return redirect()->back()->with('error', 'Weekly log sudah dikonfirmasi dan tidak bisa dihapus.');
+        }
+
+        if ($weeklyLog->photo) {
+            $photoPath = str_replace('/storage/', '', $weeklyLog->photo);
+            Storage::disk('public')->delete($photoPath);
+        }
+
         $weeklyLog->delete();
 
         return redirect()->back()->with('success', 'Weekly log berhasil dihapus.');

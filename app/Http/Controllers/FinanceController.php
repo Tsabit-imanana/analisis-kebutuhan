@@ -42,7 +42,12 @@ class FinanceController extends Controller
             ];
         }
 
-        return view('admin.finance.index', [
+        $user = auth()->user();
+        $view = ($user && $user->role === 'employee')
+            ? 'employee.finance.index'
+            : 'admin.finance.index';
+
+        return view($view, [
             'finansialData' => collect($finansialData),
             'divisi' => $divisi,
             'tahun' => $tahun,
@@ -62,7 +67,12 @@ class FinanceController extends Controller
         $totalBudget = $budgets->sum('jumlah_budget');
         $totalRealized = $details->sum('jumlah_anggaran');
 
-        return view('admin.finance.show', [
+        $user = auth()->user();
+        $view = ($user && $user->role === 'employee')
+            ? 'employee.finance.show'
+            : 'admin.finance.show';
+
+        return view($view, [
             'periode' => $periode,
             'budgets' => $budgets,
             'details' => $details,

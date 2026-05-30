@@ -22,7 +22,7 @@
         <h2 class="section-title">Ringkasan Umum</h2>
         <div class="dashboard-section">
             <div class="chart-card-inline">
-                <h3 class="chart-title">Data Umum</h3>
+                <h3 class="chart-title">Persebaran Pengguna</h3>
                 <div class="canvas-wrapper">
                     <canvas id="generalPolarChart"></canvas>
                 </div>
@@ -30,20 +30,12 @@
 
             <div class="stats-grid-2x2">
                 <div class="stat-card">
-                    <span class="stat-title">Jumlah Pengguna</span>
-                    <span class="stat-value">{{ $userCount ?? 0 }}</span>
+                    <span class="stat-title">Jumlah SPV</span>
+                    <span class="stat-value">{{ $spvCount ?? 0 }}</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-title">Jumlah Divisi</span>
-                    <span class="stat-value">{{ $divisiCount ?? 0 }}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-title">Total Task</span>
-                    <span class="stat-value">{{ $taskTotal ?? 0 }}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-title">Total Weekly Log</span>
-                    <span class="stat-value">{{ $weeklyTotal ?? 0 }}</span>
+                    <span class="stat-title">Jumlah Employee</span>
+                    <span class="stat-value">{{ $employeeCount ?? 0 }}</span>
                 </div>
             </div>
         </div>
@@ -147,10 +139,8 @@
             if(typeof renderGeneralChart === 'function') {
                 renderGeneralChart(
                     'generalPolarChart',
-                    {{ $userCount ?? 0 }},
-                    {{ $divisiCount ?? 0 }},
-                    {{ $taskTotal ?? 0 }},
-                    {{ $weeklyTotal ?? 0 }}
+                    {{ $spvCount ?? 0 }},
+                    {{ $employeeCount ?? 0 }}
                 );
             }
 

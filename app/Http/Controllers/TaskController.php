@@ -44,10 +44,11 @@ class TaskController extends Controller
             }
         }
 
-        $view = 'admin.task.index';
-        if ($user && $user->role === 'employee') {
-            $view = 'employee.task.index';
-        }
+        $view = match ($user?->role) {
+            'employee' => 'employee.task.index',
+            'spv' => 'spv.task.index',
+            default => 'admin.task.index',
+        };
 
         $users = collect();
         if ($user && in_array($user->role, ['admin', 'spv'], true)) {

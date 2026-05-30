@@ -7,11 +7,18 @@ use App\Models\detailLaporan;
 use App\Models\Task;
 use App\Models\weeklyLog;
 
-class SpvDashboardController extends Controller
+class EmployeeDashboardController extends Controller
 {
     public function index()
     {
-        $tasks = Task::with('latestDetail')->get();
+        $user = auth()->user();
+
+        $userCount = $user ? 1 : 0;
+        $divisiCount = $user && $user->divisi_id ? 1 : 0;
+
+        $tasks = Task::with('latestDetail')
+            ->where('assigned_to', $user->id)
+            ->get();
         $taskTotal = $tasks->count();
         $taskStatusCounts = [
             'todo' => 0,
@@ -28,20 +35,32 @@ class SpvDashboardController extends Controller
             }
         }
 
-        $weeklyTotal = weeklyLog::count();
-        $weeklyPending = weeklyLog::where('status', 'pending')->orWhereNull('status')->count();
-        $weeklyConfirmed = weeklyLog::where('status', 'confirmed')->count();
+        $weeklyTotal = weeklyLog::where('logged_by', $user->id)->count();
+        $weeklyPending = weeklyLog::where('logged_by', $user->id)
+            ->where(function ($query) {
+                $query->where('status', 'pending')->orWhereNull('status');
+            })
+            ->count();
+        $weeklyConfirmed = weeklyLog::where('logged_by', $user->id)
+            ->where('status', 'confirmed')
+            ->count();
 
-        $totalBudget = budget::sum('jumlah_budget');
-        $totalRealized = detailLaporan::sum('jumlah_anggaran');
+        $periodeIds = detailLaporan::where('user_id', $user->id)
+            ->distinct()
+            ->pluck('periode_laporan_id');
+
+        $totalBudget = budget::whereIn('periode_laporan_id', $periodeIds)
+            ->sum('jumlah_budget');
+        $totalRealized = detailLaporan::where('user_id', $user->id)
+            ->sum('jumlah_anggaran');
         $remainingBudget = $totalBudget - $totalRealized;
         $realizedPercentage = $totalBudget > 0
             ? round(($totalRealized / $totalBudget) * 100, 2)
             : 0;
 
-        return view('spv.dashboard', [
-            'userCount' => 0,
-            'divisiCount' => 0,
+        return view('employee.dashboard', [
+            'userCount' => $userCount,
+            'divisiCount' => $divisiCount,
             'taskTotal' => $taskTotal,
             'taskStatusCounts' => $taskStatusCounts,
             'weeklyTotal' => $weeklyTotal,

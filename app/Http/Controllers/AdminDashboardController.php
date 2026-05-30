@@ -15,6 +15,8 @@ class AdminDashboardController extends Controller
     {
         $userCount = User::count();
         $divisiCount = divisi::count();
+        $spvCount = User::where('role', 'spv')->count();
+        $employeeCount = User::where('role', 'employee')->count();
 
         $tasks = Task::with('latestDetail')->get();
         $taskTotal = $tasks->count();
@@ -47,6 +49,8 @@ class AdminDashboardController extends Controller
         return view('admin.dashboard', [
             'userCount' => $userCount,
             'divisiCount' => $divisiCount,
+            'spvCount' => $spvCount,
+            'employeeCount' => $employeeCount,
             'taskTotal' => $taskTotal,
             'taskStatusCounts' => $taskStatusCounts,
             'weeklyTotal' => $weeklyTotal,
