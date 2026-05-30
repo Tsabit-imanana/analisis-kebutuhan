@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/css/dashboard.css',
                 'resources/css/weekly_log/index.css',
                 'resources/css/finance.css',
+                'resources/css/documents.css',
                 'resources/js/app.js',
             ],
             refresh: true,

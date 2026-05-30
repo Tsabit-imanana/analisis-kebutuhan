@@ -9,6 +9,8 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\PeriodeLaporanController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\SpvDashboardController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -47,9 +49,8 @@ Route::middleware('auth')->group(function () {
         ->middleware('admin')
         ->name('admin.dashboard');
 
-    Route::get('/spv/dashboard', function () {
-        return view('spv.dashboard');
-    })->name('spv.dashboard');
+    Route::get('/spv/dashboard', [SpvDashboardController::class, 'index'])
+        ->name('spv.dashboard');
 
     Route::get('/employee/dashboard', function () {
         return view('employee.dashboard');
@@ -98,5 +99,15 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{divisi}', [DivisiController::class, 'destroy'])->name('destroy');
             Route::get('/{divisi}', [DivisiController::class, 'show'])->name('show');
         });
+    });
+
+    Route::prefix('documents')->name('documents.')->group(function () {
+        Route::get('/', [DocumentController::class, 'index'])->name('index');
+        Route::get('/create', [DocumentController::class, 'create'])->name('create');
+        Route::post('/', [DocumentController::class, 'store'])->name('store');
+        Route::post('/{document}/submit', [DocumentController::class, 'submit'])->name('submit');
+        Route::post('/{document}/approve', [DocumentController::class, 'approve'])->name('approve');
+        Route::post('/{document}/reject', [DocumentController::class, 'reject'])->name('reject');
+        Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
     });
 });

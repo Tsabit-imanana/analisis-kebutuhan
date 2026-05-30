@@ -1,64 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SPV Dashboard</title>
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe, #f8fafc);
-            color: #0f172a;
-        }
+@extends('layout.sidebar-spv')
 
-        .card {
-            width: min(92vw, 720px);
-            padding: 32px;
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-            text-align: center;
-        }
+@section('title', 'SPV Dashboard - MUMS')
 
-        .badge {
-            display: inline-block;
-            margin-bottom: 16px;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: #0f172a;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
+@section('content')
+    @vite(['resources/css/dashboard.css'])
 
-        .logout-button {
-            margin-top: 20px;
-            padding: 12px 18px;
-            border: none;
-            border-radius: 12px;
-            background: #0f172a;
-            color: #fff;
-            font-weight: 700;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <main class="card">
-        <span class="badge">SPV</span>
-        <h1>Login berhasil sebagai SPV</h1>
-        <p>Halaman dashboard SPV masih sederhana untuk sementara. Role ini sudah lolos autentikasi dan redirect berjalan benar.</p>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-button">Logout</button>
-        </form>
-    </main>
-</body>
-</html>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Dashboard SPV</h1>
+            <p>Ringkasan Weekly Log dan Finance Budgeting.</p>
+        </div>
+
+        <h2 class="section-title">Weekly Log</h2>
+        <div class="stats-row three-stats">
+            <div class="stat-card">
+                <span class="stat-title">Total Log</span>
+                <span class="stat-value">{{ $weeklyTotal ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Belum Dikonfirmasi</span>
+                <span class="stat-value">{{ $weeklyPending ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Sudah Dikonfirmasi</span>
+                <span class="stat-value">{{ $weeklyConfirmed ?? 0 }}</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Finance Budgeting</h2>
+        <div class="stats-row four-stats">
+            <div class="stat-card">
+                <span class="stat-title">Total Budget</span>
+                <span class="stat-value">Rp {{ number_format($totalBudget ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Total Realisasi</span>
+                <span class="stat-value">Rp {{ number_format($totalRealized ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Sisa Anggaran</span>
+                <span class="stat-value">Rp {{ number_format($remainingBudget ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">% Realisasi</span>
+                <span class="stat-value">{{ $realizedPercentage ?? 0 }}%</span>
+            </div>
+        </div>
+    </div>
+@endsection
