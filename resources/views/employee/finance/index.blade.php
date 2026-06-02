@@ -13,7 +13,6 @@
         </div>
         <div class="finance-toolbar">
             <a href="/" class="finance-btn finance-btn--secondary">← Back</a>
-            <button type="button" onclick="openAddPeriodModal()" class="finance-btn finance-btn--primary">+ Tambah Periode</button>
         </div>
     </div>
 
@@ -73,7 +72,6 @@
         <div class="stat-card finance-card" style="margin: 0 0 12px 0;">
             <div class="finance-empty">
                 Tidak ada data periode laporan.
-                <a href="#" onclick="openAddPeriodModal(); return false;">Tambah periode sekarang.</a>
             </div>
         </div>
     @else
@@ -118,7 +116,6 @@
                                 <td>
                                     <div class="finance-action-buttons">
                                         <a href="{{ route('finance.show', $data['periode']->id) }}" class="finance-btn finance-btn--secondary finance-btn--sm">View</a>
-                                        <button type="button" onclick="openBudgetModal({{ $data['periode']->id }})" class="finance-btn finance-btn--secondary finance-btn--sm">+ Budget</button>
                                         <button type="button" onclick="openDetailModal({{ $data['periode']->id }})" class="finance-btn finance-btn--secondary finance-btn--sm">+ Detail</button>
                                     </div>
                                 </td>
@@ -136,30 +133,6 @@
         @endforeach
     @endif
 
-    <div id="budgetModal" class="modal">
-        <div class="modal-content">
-            <div class="finance-modal-header">
-                <h3>Tambah Budget</h3>
-                <button type="button" class="finance-modal-close" onclick="closeBudgetModal()">&times;</button>
-            </div>
-            <form action="{{ route('finance.budget.store') }}" method="POST">
-                @csrf
-                <div class="finance-field">
-                    <label>Periode</label>
-                    <input type="hidden" name="periode_laporan_id" id="budget_periode_id">
-                    <input type="text" id="budget_periode_display" disabled>
-                </div>
-                <div class="finance-field">
-                    <label>Jumlah Budget (Rp)</label>
-                    <input type="number" name="jumlah_budget" required min="0" step="100">
-                </div>
-                <div class="finance-form-actions">
-                    <button type="button" onclick="closeBudgetModal()" class="finance-btn finance-btn--secondary">Batal</button>
-                    <button type="submit" class="finance-btn finance-btn--primary">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <div id="detailModal" class="modal">
         <div class="modal-content">
@@ -207,48 +180,6 @@
         </div>
     </div>
 
-    <div id="periodeModal" class="modal">
-        <div class="modal-content">
-            <div class="finance-modal-header">
-                <h3>Tambah Periode Laporan</h3>
-                <button type="button" class="finance-modal-close" onclick="closeAddPeriodModal()">&times;</button>
-            </div>
-            <form action="/periode-laporan" method="POST">
-                @csrf
-                <div class="finance-field">
-                    <label>Tahun</label>
-                    <select name="tahun_id" required>
-                        <option value="">-- Pilih Tahun --</option>
-                        @foreach ($tahun as $t)
-                            <option value="{{ $t->id }}">{{ $t->tahun }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="finance-field">
-                    <label>Bulan</label>
-                    <select name="bulan_id" required>
-                        <option value="">-- Pilih Bulan --</option>
-                        @foreach ($bulan as $b)
-                            <option value="{{ $b->id }}">{{ $b->bulan }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="finance-field">
-                    <label>Divisi</label>
-                    <select name="divisi_id" required>
-                        <option value="">-- Pilih Divisi --</option>
-                        @foreach ($divisi as $d)
-                            <option value="{{ $d->id }}">{{ $d->nama_divisi }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="finance-form-actions">
-                    <button type="button" onclick="closeAddPeriodModal()" class="finance-btn finance-btn--secondary">Batal</button>
-                    <button type="submit" class="finance-btn finance-btn--primary">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <script>
         function initDivisiPaginations() {
@@ -302,19 +233,6 @@
 
         window.addEventListener('DOMContentLoaded', initDivisiPaginations);
 
-        function openBudgetModal(periodeId) {
-            const row = document.querySelector(`tr.periode-row[data-periode-id="${periodeId}"]`);
-            const periodeDisplay = row?.querySelector('td strong')?.textContent || 'Unknown';
-
-            document.getElementById('budget_periode_id').value = periodeId;
-            document.getElementById('budget_periode_display').value = periodeDisplay;
-            document.getElementById('budgetModal').style.display = 'block';
-        }
-
-        function closeBudgetModal() {
-            document.getElementById('budgetModal').style.display = 'none';
-        }
-
         function openDetailModal(periodeId) {
             const row = document.querySelector(`tr.periode-row[data-periode-id="${periodeId}"]`);
             const periodeDisplay = row?.querySelector('td strong')?.textContent || 'Unknown';
@@ -328,27 +246,10 @@
             document.getElementById('detailModal').style.display = 'none';
         }
 
-        function openAddPeriodModal() {
-            document.getElementById('periodeModal').style.display = 'block';
-        }
-
-        function closeAddPeriodModal() {
-            document.getElementById('periodeModal').style.display = 'none';
-        }
-
         window.onclick = function(event) {
-            const budgetModal = document.getElementById('budgetModal');
             const detailModal = document.getElementById('detailModal');
-            const periodeModal = document.getElementById('periodeModal');
-
-            if (event.target === budgetModal) {
-                closeBudgetModal();
-            }
             if (event.target === detailModal) {
                 closeDetailModal();
-            }
-            if (event.target === periodeModal) {
-                closeAddPeriodModal();
             }
         };
     </script>

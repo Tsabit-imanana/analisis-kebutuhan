@@ -125,4 +125,24 @@ class FinanceController extends Controller
 
         return redirect()->back()->with('success', 'Detail laporan berhasil ditambahkan');
     }
+
+    /**
+     * Delete a budget entry.
+     */
+    public function destroyBudget(budget $budget)
+    {
+        $budget->delete();
+
+        return redirect()->back()->with('success', 'Budget berhasil dihapus');
+    }
+
+    /**
+     * Delete a detail laporan entry.
+     */
+    public function destroyDetail(detailLaporan $detailLaporan)
+    {
+        $detailLaporan->delete();
+
+        return redirect()->back()->with('success', 'Detail laporan berhasil dihapus');
+    }
 }

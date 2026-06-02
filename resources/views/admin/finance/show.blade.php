@@ -58,6 +58,7 @@
                     <th>#</th>
                     <th>Jumlah Budget</th>
                     <th>Tanggal Input</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +67,13 @@
                         <td>{{ $index + 1 }}</td>
                         <td class="currency">Rp{{ number_format($budget->jumlah_budget, 0, ',', '.') }}</td>
                         <td>{{ $budget->created_at->format('d/m/Y H:i') }}</td>
+                        <td>
+                            <form method="POST" action="{{ route('finance.budget.destroy', $budget->id) }}" onsubmit="return confirm('Hapus budget ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="finance-btn finance-btn--danger finance-btn--sm">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -88,6 +96,7 @@
                     <th>Jumlah Anggaran</th>
                     <th>Bukti Foto</th>
                     <th>Tanggal Input</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,6 +120,13 @@
                             @endif
                         </td>
                         <td>{{ $detail->created_at->format('d/m/Y H:i') }}</td>
+                        <td>
+                            <form method="POST" action="{{ route('finance.detail.destroy', $detail->id) }}" onsubmit="return confirm('Hapus detail ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="finance-btn finance-btn--danger finance-btn--sm">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

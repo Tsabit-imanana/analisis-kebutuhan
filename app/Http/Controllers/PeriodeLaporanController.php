@@ -76,6 +76,8 @@ class PeriodeLaporanController extends Controller
      */
     public function destroy(periodeLaporan $periodeLaporan)
     {
-        //
+        $periodeLaporan->delete();
+
+        return redirect()->route('finance.index')->with('success', 'Periode laporan berhasil dihapus');
     }
 }

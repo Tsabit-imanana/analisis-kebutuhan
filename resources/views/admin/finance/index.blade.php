@@ -120,6 +120,11 @@
                                         <a href="{{ route('finance.show', $data['periode']->id) }}" class="finance-btn finance-btn--secondary finance-btn--sm">View</a>
                                         <button type="button" onclick="openBudgetModal({{ $data['periode']->id }})" class="finance-btn finance-btn--secondary finance-btn--sm">+ Budget</button>
                                         <button type="button" onclick="openDetailModal({{ $data['periode']->id }})" class="finance-btn finance-btn--secondary finance-btn--sm">+ Detail</button>
+                                        <form method="POST" action="{{ route('periode.destroy', $data['periode']->id) }}" onsubmit="return confirm('Hapus periode ini? Semua budget dan detail akan ikut terhapus.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="finance-btn finance-btn--danger finance-btn--sm">Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

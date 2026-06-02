@@ -89,11 +89,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('finance')->name('finance.')->group(function () {
         Route::get('/', [FinanceController::class, 'index'])->name('index');
         Route::get('/{id}', [FinanceController::class, 'show'])->name('show');
-        Route::post('/budget', [FinanceController::class, 'storeBudget'])->name('budget.store');
+        Route::post('/budget', [FinanceController::class, 'storeBudget'])->middleware('admin')->name('budget.store');
+        Route::delete('/budget/{budget}', [FinanceController::class, 'destroyBudget'])->middleware('admin')->name('budget.destroy');
         Route::post('/detail', [FinanceController::class, 'storeDetail'])->name('detail.store');
+        Route::delete('/detail/{detailLaporan}', [FinanceController::class, 'destroyDetail'])->middleware('admin')->name('detail.destroy');
     });
 
-    Route::post('/periode-laporan', [PeriodeLaporanController::class, 'store']);
+    Route::post('/periode-laporan', [PeriodeLaporanController::class, 'store'])->middleware('admin');
+    Route::delete('/periode-laporan/{periodeLaporan}', [PeriodeLaporanController::class, 'destroy'])
+        ->middleware('admin')
+        ->name('periode.destroy');
 
     Route::middleware('admin')->group(function () {
         Route::get('/role-management', [RoleManagementController::class, 'index'])->name('admin.users.index');
