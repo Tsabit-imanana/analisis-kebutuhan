@@ -178,10 +178,8 @@
                     <label>User (PIC)</label>
                     <select name="user_id" required>
                         <option value="">-- Pilih User --</option>
-                        @foreach ($finansialData as $data)
-                            @foreach ($data['details'] as $detail)
-                                <option value="{{ $detail->user_id }}">{{ $detail->user->name ?? '-' }}</option>
-                            @endforeach
+                        @foreach ($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                 </div>

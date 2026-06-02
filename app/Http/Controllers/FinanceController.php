@@ -8,6 +8,7 @@ use App\Models\detailLaporan;
 use App\Models\divisi;
 use App\Models\tahun_periode;
 use App\Models\bulan_periode;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FinanceController extends Controller
@@ -21,6 +22,7 @@ class FinanceController extends Controller
         $divisi = divisi::all();
         $tahun = tahun_periode::all();
         $bulan = bulan_periode::all();
+        $users = User::orderBy('name')->get();
 
         // Group budgets and details by periode
         $finansialData = [];
@@ -52,6 +54,7 @@ class FinanceController extends Controller
             'divisi' => $divisi,
             'tahun' => $tahun,
             'bulan' => $bulan,
+            'users' => $users,
         ]);
     }
 

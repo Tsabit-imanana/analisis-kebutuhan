@@ -12,6 +12,7 @@ use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\SpvDashboardController;
 use App\Http\Controllers\EmployeeDashboardController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     if (auth()->check()) {

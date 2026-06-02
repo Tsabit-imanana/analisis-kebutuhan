@@ -43,6 +43,7 @@ class User extends Authenticatable
         'no_telepon',
         'role',
         'divisi_id',
+        'photo',
     ];
 
     public function divisi()

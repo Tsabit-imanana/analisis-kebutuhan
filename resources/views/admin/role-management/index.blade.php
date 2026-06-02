@@ -146,7 +146,7 @@
     <div id="editModal" class="modal">
         <div class="modal-content modal-lg">
             <h2>Edit User</h2>
-            <form id="editForm" method="POST">
+            <form id="editForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="grid">
@@ -173,6 +173,7 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="field"><label>Foto Profil</label><input type="file" name="photo" accept="image/*"></div>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Batal</button>
@@ -205,7 +206,7 @@
             document.getElementById('edit_divisi_id').value = button.dataset.divisi || '';
             document.getElementById('edit_role').value = button.dataset.role;
 
-            document.getElementById('editForm').action = "{{ url('admin/users') }}/" + id;
+            document.getElementById('editForm').action = "{{ url('role-management') }}/" + id;
         }
         function closeEditModal() {
             document.getElementById('editModal').style.display = 'none';

@@ -42,7 +42,7 @@
                     <h2 class="profile-name">{{ auth()->user()->name }}</h2>
                 </div>
 
-                <button type="button" class="btn btn-primary" onclick="openEditProfileModal()">Edit Profile</button>
+                <button type="button" class="btn btn-primary" onclick="handleEditProfileClick()">Edit Profile</button>
             </div>
 
             <div class="profile-details-grid">
@@ -104,13 +104,34 @@
 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="submit" class="btn btn-primary" @if(auth()->user()->role !== 'admin') disabled @endif>Simpan Perubahan</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <div id="restrictedEditModal" class="modal">
+        <div class="modal-content modal-md">
+            <h2>Akses Dibatasi</h2>
+            <p>Hubungi admin untuk mengubah data.</p>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="closeRestrictedEditModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const isAdminUser = {{ auth()->user()->role === 'admin' ? 'true' : 'false' }};
+
+        function handleEditProfileClick() {
+            if (!isAdminUser) {
+                openRestrictedEditModal();
+                return;
+            }
+
+            openEditProfileModal();
+        }
+
         function openEditProfileModal() {
             document.getElementById('editProfileModal').style.display = 'block';
         }
@@ -119,9 +140,21 @@
             document.getElementById('editProfileModal').style.display = 'none';
         }
 
+        function openRestrictedEditModal() {
+            document.getElementById('restrictedEditModal').style.display = 'block';
+        }
+
+        function closeRestrictedEditModal() {
+            document.getElementById('restrictedEditModal').style.display = 'none';
+        }
+
         window.onclick = function(event) {
             if (event.target == document.getElementById('editProfileModal')) {
                 closeEditProfileModal();
+            }
+
+            if (event.target == document.getElementById('restrictedEditModal')) {
+                closeRestrictedEditModal();
             }
         };
     </script>

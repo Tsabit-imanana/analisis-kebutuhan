@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class RoleManagementController extends Controller
 {
@@ -98,6 +100,7 @@ class RoleManagementController extends Controller
             'no_telepon' => ['required', 'string', 'max:255'],
             'role' => ['required', 'in:' . implode(',', self::ROLES)],
             'divisi_id' => ['nullable', 'exists:divisis,id'],
+            'photo' => ['nullable', 'image', 'max:2048'],
         ]);
 
         if ($user->role === 'admin' && $validated['role'] !== 'admin') {
@@ -120,6 +123,16 @@ class RoleManagementController extends Controller
 
         if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
+        }
+
+        if (Schema::hasColumn('users', 'photo') && $request->hasFile('photo')) {
+            if ($user->photo) {
+                $photoPath = str_replace('/storage/', '', $user->photo);
+                Storage::disk('public')->delete($photoPath);
+            }
+
+            $path = $request->file('photo')->store('profile', 'public');
+            $user->photo = Storage::url($path);
         }
 
         $user->save();
