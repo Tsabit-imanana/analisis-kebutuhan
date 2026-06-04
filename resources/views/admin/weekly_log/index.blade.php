@@ -12,7 +12,10 @@
                 <p>Pencatatan aktivitas harian dan dokumentasi antar divisi.</p>
             </div>
             <button class="btn-dark" onclick="openAddModal()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <svg viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
                 Log Baru
             </button>
         </div>
@@ -37,7 +40,7 @@
                 <h3>Weekly Log</h3>
                 <div class="table-controls">
                     <label>Tampilkan</label>
-                    <select class="form-select"> {{-- Backend untuk show data --}}
+                    <select class="form-select">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -52,7 +55,7 @@
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
-                            <tr> {{-- Ngikut Tsabit --}}
+                            <tr>
                                 <th>Start Date</th>
                                 <th>Finish Date</th>
                                 <th>Logged By</th>
@@ -111,7 +114,7 @@
                                         <td>{{ $log->notes }}</td>
                                         <td>
                                             @if ($log->photo)
-                                                <img src="{{ $log->photo }}" alt="Foto Weekly Log" class="table-img" onerror="this.outerHTML='<span style=\'color:red;\'>Error: Foto tidak bisa dimuat</span>';" />
+                                                <img src="{{ $log->photo }}" alt="Foto Weekly Log" class="table-img" onerror="this.outerHTML='<span class=\'text-error\'>Error: Foto tidak bisa dimuat</span>';" />
                                             @else
                                                 <span class="text-muted">Tidak ada foto.</span>
                                             @endif
@@ -124,35 +127,20 @@
                                                     data-s-date="{{ $log->s_date }}"
                                                     data-f-date="{{ $log->f_date }}"
                                                     data-logged-by="{{ $log->logged_by }}"
+                                                    data-divisi-id="{{ $log->divisi_id }}"
                                                     data-status="{{ $log->status ?? 'pending' }}"
                                                     data-title="{{ htmlspecialchars($log->title, ENT_QUOTES, 'UTF-8') }}"
                                                     data-description="{{ htmlspecialchars($log->description, ENT_QUOTES, 'UTF-8') }}"
                                                     data-notes="{{ htmlspecialchars($log->notes, ENT_QUOTES, 'UTF-8') }}"
                                                 >
-                                                    <svg
-                                                        width="18"
-                                                        height="18"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round">
+                                                    <svg viewBox="0 0 24 24">
                                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                                     </svg>
                                                 </button>
 
                                                 <button type="button" class="btn-icon" onclick="openDeleteModal('{{ route('weekly_log.destroy', $log->id) }}')">
-                                                    <svg
-                                                        width="18"
-                                                        height="18"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round">
+                                                    <svg viewBox="0 0 24 24">
                                                         <polyline points="3 6 5 6 21 6"></polyline>
                                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                                     </svg>
@@ -165,7 +153,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="pagination-wrapper"> {{-- Backend Pagination --}}
+                <div class="pagination-wrapper">
                     <ul class="pagination">
                         <li><a href="#" class="disabled">&laquo;</a></li>
                         <li><a href="#" class="active">1</a></li>
@@ -180,7 +168,7 @@
 
     <div id="addModal" class="modal">
         <div class="modal-content">
-            <h3>Tambah Weekly Log</h3> {{-- Add Data --}}
+            <h3>Tambah Weekly Log</h3>
             <form action="{{ route('weekly_log.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <label>Tanggal Mulai</label><br>
@@ -220,7 +208,7 @@
                 <textarea name="notes" class="form-control"></textarea><br>
 
                 <label>Photo</label><br>
-                <input type="file" name="photo" accept="image/*" class="form-control"><br><br> {{-- Butuh image adjustment --}}
+                <input type="file" name="photo" accept="image/*" class="form-control"><br><br>
 
                 <div class="form-actions">
                     <button type="submit" class="btn-dark">Simpan</button>
@@ -232,7 +220,7 @@
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <h3>Edit Weekly Log</h3> {{-- Edit Data --}}
+            <h3>Edit Weekly Log</h3>
             <form id="editForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -247,6 +235,14 @@
                     <option value="">-- Pilih User --</option>
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select><br>
+
+                <label>Divisi</label><br>
+                <select name="divisi_id" id="edit_divisi_id" class="form-control">
+                    <option value="">-- Pertahankan Divisi Saat Ini --</option>
+                    @foreach ($divisis as $divisi)
+                        <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
                     @endforeach
                 </select><br>
 
@@ -266,7 +262,7 @@
                 <textarea name="notes" id="edit_notes" class="form-control"></textarea><br>
 
                 <label>Photo (Kosongkan jika tidak diubah)</label><br>
-                <input type="file" name="photo" accept="image/*" class="form-control"><br><br> {{-- Butuh image adjustment --}}
+                <input type="file" name="photo" accept="image/*" class="form-control"><br><br>
 
                 <div class="form-actions">
                     <button type="submit" class="btn-dark">Simpan</button>
@@ -279,8 +275,8 @@
     <div id="deleteModal" class="modal">
         <div class="modal-content modal-center modal-sm">
             <div class="warning-icon">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L1 21H23L12 2ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z" fill="black"/>
+                <svg class="icon-delete-modal" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21H23L12 2ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z"/>
                 </svg>
             </div>
             <h3 class="delete-title">Apakah Anda Yakin Ingin Menghapus Data?</h3>
@@ -298,29 +294,31 @@
     </div>
 
     @if(session('success'))
-    <div id="successModal" class="modal" style="display: block;">
+    <div id="successModal" class="modal modal-show">
         <div class="modal-content modal-center modal-sm">
-            <div class="warning-icon" style="color: #10b981;">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <div class="warning-icon color-success">
+                <svg class="icon-success-modal" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
             </div>
             <h3 class="delete-title">Berhasil!</h3>
-            <p class="delete-subtitle" style="margin-bottom: 0;">{{ session('success') }}</p>
+            <p class="delete-subtitle mb-0">{{ session('success') }}</p>
         </div>
     </div>
     @endif
 
     <script>
-        // Call Tambah
         function openAddModal() { document.getElementById('addModal').style.display = 'block'; }
         function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
 
-        // Call Edit
         function openEditModal(button) {
             var id = button.dataset.id;
             document.getElementById('editModal').style.display = 'block';
             document.getElementById('edit_s_date').value = button.dataset.sDate;
             document.getElementById('edit_f_date').value = button.dataset.fDate;
             document.getElementById('edit_logged_by').value = button.dataset.loggedBy;
+            document.getElementById('edit_divisi_id').value = button.dataset.divisiId || '';
             document.getElementById('edit_status').value = button.dataset.status || 'pending';
             document.getElementById('edit_title').value = button.dataset.title || '';
             document.getElementById('edit_description').value = button.dataset.description || '';
@@ -329,7 +327,6 @@
         }
         function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
 
-        // Call Delete
         function openDeleteModal(actionUrl) {
             document.getElementById('deleteModal').style.display = 'block';
             document.getElementById('deleteForm').action = actionUrl;
@@ -338,14 +335,12 @@
             document.getElementById('deleteModal').style.display = 'none';
         }
 
-        // Menutup pop up saat diluar kotak
         window.onclick = function(event) {
             if (event.target == document.getElementById('addModal')) closeAddModal();
             if (event.target == document.getElementById('editModal')) closeEditModal();
             if (event.target == document.getElementById('deleteModal')) closeDeleteModal();
         };
 
-        // Timer pop up success
         document.addEventListener("DOMContentLoaded", function() {
             var successModal = document.getElementById('successModal');
             if (successModal) {

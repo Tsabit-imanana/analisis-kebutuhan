@@ -1,12 +1,12 @@
 body {
     background: #f1f5f9;
     font-family: 'DM Sans', sans-serif;
+    margin: 0;
 }
 
 .task-container {
     padding: 32px;
     min-height: 100vh;
-    background: #f1f5f9;
 }
 
 .task-header {
@@ -30,6 +30,20 @@ body {
     margin: 0;
 }
 
+.status-title {
+    margin: 24px 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.task-stat-card,
+.task-table {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
 .task-stats-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -38,10 +52,7 @@ body {
 }
 
 .task-stat-card {
-    background-color: #ffffff;
-    border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -61,44 +72,10 @@ body {
     letter-spacing: -0.5px;
 }
 
-.add-task-wrapper {
-    margin: 0 0 12px 0;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.btn-add-task {
-    background-color: #000000;
-    color: #ffffff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.btn-add-task:hover {
-    background-color: #333333;
-}
-
-.status-title {
-    margin: 24px 0 12px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000;
-}
-
 .task-table {
     width: 100%;
     border-collapse: collapse;
-    background: #ffffff;
-    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .task-table th {
@@ -126,6 +103,42 @@ body {
     font-style: italic;
 }
 
+.btn-dark,
+.btn-light,
+.btn-add-task {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-dark,
+.btn-add-task {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-dark:hover,
+.btn-add-task:hover {
+    background-color: #333333;
+}
+
+.btn-light {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.add-task-wrapper {
+    margin: 0 0 12px 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .action-cell {
     display: flex;
     gap: 8px;
@@ -138,10 +151,67 @@ body {
     color: #6b7280;
     cursor: pointer;
     padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease-in-out;
 }
 
 .btn-icon:hover {
     color: #111827;
+}
+
+.btn-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.btn-icon svg.icon-fill {
+    fill: currentColor;
+    stroke: none;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #9ca3af;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    resize: vertical;
+}
+
+.form-select {
+    padding: 6px 12px;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 16px;
 }
 
 .modal {
@@ -152,6 +222,10 @@ body {
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.5);
     overflow-y: auto;
+}
+
+.modal-show {
+    display: block;
 }
 
 .modal-content {
@@ -165,65 +239,82 @@ body {
 
 .modal-content h3 {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     font-size: 20px;
+    font-weight: 700;
     color: #000000;
 }
 
 .modal-content label {
     font-size: 14px;
-    font-weight: 500;
-    color: #000000;
+    font-weight: 600;
+    color: #111827;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
-.modal-content input,
-.modal-content textarea,
-.modal-content select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    margin-bottom: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: 14px;
+.modal-center {
+    text-align: center;
+    padding: 40px 32px;
 }
 
-.form-actions {
+.modal-sm {
+    width: 400px;
+}
+
+.modal-actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 16px;
+    justify-content: center;
+    gap: 16px;
 }
 
-.btn-dark {
-    background-color: #000000;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+.btn-modal-action {
+    width: 120px;
+    justify-content: center;
+    padding: 12px;
     font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s;
+    border-radius: 8px;
 }
 
-.btn-dark:hover {
-    background-color: #333333;
+.warning-icon {
+    margin-bottom: 24px;
 }
 
-.btn-light {
-    background-color: #e5e7eb;
-    color: #374151;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+.icon-delete-modal {
+    width: 64px;
+    height: 64px;
+    fill: #000000;
+}
+
+.icon-success-modal {
+    width: 64px;
+    height: 64px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.delete-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 8px 0;
+}
+
+.delete-subtitle {
     font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
+    color: #4b5563;
+    margin: 0 0 32px 0;
+}
+
+.color-success {
+    color: #10b981;
+}
+
+.mb-0 {
+    margin-bottom: 0;
 }
 
 @media (max-width: 1024px) {
@@ -239,7 +330,6 @@ body {
     .task-container {
         padding: 16px;
     }
-
     .modal-content {
         width: calc(100% - 32px);
         margin: 64px auto;

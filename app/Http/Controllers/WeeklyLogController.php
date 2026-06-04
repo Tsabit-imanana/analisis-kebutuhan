@@ -138,8 +138,8 @@ class WeeklyLogController extends Controller
         $data = $request->validated();
 
         // Keep divisi snapshot aligned to the selected logged_by.
-        if (! empty($data['logged_by'])) {
-            $data['divisi_id'] = User::where('id', $data['logged_by'])->value('divisi_id');
+        if (empty($data['divisi_id'])) {
+            $data['divisi_id'] = $weeklyLog->divisi_id;
         }
 
         // Ensure status is not accidentally cleared.

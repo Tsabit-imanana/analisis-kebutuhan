@@ -136,7 +136,7 @@ class TaskController extends Controller
             'notes' => null,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Task baru berhasil ditambahkan!');
     }
 
     /**
@@ -158,43 +158,39 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-public function editTask(Request $request, $id)
-{
-    $user = Auth::user();
+    public function editTask(Request $request, $id)
+    {
+        $user = Auth::user();
 
-    if (! $user || ! in_array($user->role, ['admin', 'spv'], true)) {
-        return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk mengubah task.');
-    }
+        if (! $user || ! in_array($user->role, ['admin', 'spv'], true)) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk mengubah task.');
+        }
 
-    $request->validate([
-    'status' => 'required|in:todo,on_progress,submitted,accepted,rejected',
-    'notes' => 'nullable|string|max:1000',
-]);
-    $task = Task::findOrFail($id);
-
-    // update task utama
-    $task->update([
-        'title' => $request->title,
-        'description' => $request->description,
-    ]);
-
-    // ambil status terakhir
-    $lastDetail = $task->details()
-        ->orderByDesc('created_at')
-        ->first();
-
-    // cek apakah status berubah
-    if (!$lastDetail || $lastDetail->status !== $request->status) {
-
-        Task_details::create([
-            'task_id' => $task->id,
-            'status' => $request->status,
-            'notes' => $request->input('notes'),
+        $request->validate([
+            'status' => 'required|in:todo,on_progress,submitted,accepted,rejected',
+            'notes' => 'nullable|string|max:1000',
         ]);
-    }
+        $task = Task::findOrFail($id);
 
-    return redirect()->back();
-}
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        $lastDetail = $task->details()
+            ->orderByDesc('created_at')
+            ->first();
+
+        if (!$lastDetail || $lastDetail->status !== $request->status) {
+            Task_details::create([
+                'task_id' => $task->id,
+                'status' => $request->status,
+                'notes' => $request->input('notes'),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Task berhasil diperbarui!');
+    }
 
     public function submitTask(Request $request, $id)
     {
@@ -244,18 +240,20 @@ public function editTask(Request $request, $id)
             ? 'Task berhasil disetujui.'
             : 'Task dikembalikan untuk revisi.');
     }
+
     /**
      * Remove the specified resource from storage.
      */
-public function destroy($id)
-{
-    $user = Auth::user();
+    public function destroy($id)
+    {
+        $user = Auth::user();
 
-    if (! $user || ! in_array($user->role, ['admin', 'spv'], true)) {
-        return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus task.');
+        if (! $user || ! in_array($user->role, ['admin', 'spv'], true)) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus task.');
+        }
+
+        Task::findOrFail($id)->delete();
+
+        return redirect()->back()->with('success', 'Task berhasil dihapus!');
     }
-
-    Task::findOrFail($id)->delete();
-    return redirect()->back();
-}
 }
