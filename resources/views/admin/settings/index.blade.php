@@ -83,6 +83,16 @@
                 {{ $divisis->links() }}
             </div>
         </div>
+
+        <div class="card">
+            <div class="header" style="margin-bottom: 12px;">
+                <div>
+                    <h1>Report Rekap</h1>
+                    <p class="muted">Unduh rangkuman data Task, Weekly Log, dan Finance Budgeting.</p>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="openReportModal()">Buat Report</button>
+            </div>
+        </div>
     </div>
 
     <div id="addModal" class="modal">
@@ -120,6 +130,27 @@
         </div>
     </div>
 
+    <div id="reportModal" class="modal">
+        <div class="modal-content modal-md">
+            <h2>Buat Report Rekap</h2>
+            <form method="POST" action="{{ route('settings.report') }}">
+                @csrf
+                <div class="field">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div class="field">
+                    <label>Tanggal Akhir</label>
+                    <input type="date" name="end_date" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Unduh PDF</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function openAddModal() {
             document.getElementById('addModal').style.display = 'block';
@@ -140,9 +171,18 @@
             document.getElementById('editModal').style.display = 'none';
         }
 
+        function openReportModal() {
+            document.getElementById('reportModal').style.display = 'block';
+        }
+
+        function closeReportModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
         window.onclick = function(event) {
             if (event.target == document.getElementById('addModal')) closeAddModal();
             if (event.target == document.getElementById('editModal')) closeEditModal();
+            if (event.target == document.getElementById('reportModal')) closeReportModal();
         };
     </script>
 @endsection

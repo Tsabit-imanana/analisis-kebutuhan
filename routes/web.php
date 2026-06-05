@@ -120,6 +120,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [DivisiController::class, 'index'])->name('index');
             Route::post('/', [DivisiController::class, 'store'])->name('store');
+            Route::post('/report', [DivisiController::class, 'report'])->name('report');
             Route::put('/{divisi}', [DivisiController::class, 'update'])->name('update');
             Route::delete('/{divisi}', [DivisiController::class, 'destroy'])->name('destroy');
         });

@@ -9,6 +9,7 @@ use App\Models\Task_details;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -52,7 +53,9 @@ class TaskController extends Controller
 
         $users = collect();
         if ($user && in_array($user->role, ['admin', 'spv'], true)) {
-            $users = User::select('id', 'name')->get();
+            $users = User::select('id', 'name')
+                ->where('role', 'employee')
+                ->get();
         }
 
         return view($view, [
@@ -118,7 +121,10 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
-            'assigned_to' => 'required|exists:users,id',
+            'assigned_to' => [
+                'required',
+                Rule::exists('users', 'id')->where('role', 'employee'),
+            ],
         ]);
 
         $result = Task::create([
