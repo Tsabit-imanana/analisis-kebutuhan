@@ -113,9 +113,25 @@
                                 </td>
                                 <td>{{ $detail->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
-                                    <button type="button" onclick="openDeleteModal('{{ route('finance.detail.destroy', $detail->id) }}')" class="btn-icon" title="Delete">
-                                        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
+                                    <div class="action-cell">
+                                        <button type="button" class="btn-icon" title="Edit"
+                                            onclick="openEditDetailModal(
+                                                {{ $detail->id }},
+                                                '{{ $detail->user_id }}',
+                                                '{{ addslashes($detail->kegiatan) }}',
+                                                '{{ addslashes($detail->deskripsi) }}',
+                                                {{ $detail->jumlah_anggaran }}
+                                            )">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </button>
+
+                                        <button type="button" onclick="openDeleteModal('{{ route('finance.detail.destroy', $detail->id) }}')" class="btn-icon" title="Delete">
+                                            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -123,6 +139,56 @@
                 </table>
             </div>
         @endif
+    </div>
+
+    <div id="editDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="finance-modal-header">
+                <h3>Edit Detail Laporan</h3>
+            </div>
+            <form id="editDetailForm" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="periode_laporan_id" value="{{ $periode->id }}">
+
+                @if(isset($users))
+                    <div class="finance-field">
+                        <label>User (PIC)</label>
+                        <select name="user_id" id="edit_user_id" required class="form-control">
+                            <option value="">-- Pilih User --</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+
+                <div class="finance-field">
+                    <label>Kegiatan</label>
+                    <input type="text" name="kegiatan" id="edit_kegiatan" required class="form-control">
+                </div>
+
+                <div class="finance-field">
+                    <label>Deskripsi</label>
+                    <textarea name="deskripsi" id="edit_deskripsi" required class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="finance-field">
+                    <label>Jumlah Anggaran (Rp)</label>
+                    <input type="number" name="jumlah_anggaran" id="edit_jumlah_anggaran" required min="0" step="100" class="form-control">
+                </div>
+
+                <div class="finance-field">
+                    <label>Bukti Foto (Kosongkan jika tidak diubah)</label>
+                    <input type="file" name="bukti_foto" accept="image/*" class="form-control" style="border:none; padding-left:0;">
+                </div>
+
+                <div class="finance-form-actions">
+                    <button type="button" onclick="closeEditDetailModal()" class="btn-light">Batal</button>
+                    <button type="submit" class="btn-dark">Update</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div id="imageModal" class="modal">
@@ -150,7 +216,50 @@
         </div>
     </div>
 
+    @if(session('success'))
+    <div id="successModal" class="modal modal-show">
+        <div class="modal-content modal-center modal-sm">
+            <div class="warning-icon color-success">
+                <svg class="icon-success-modal" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h3 class="delete-title">Berhasil!</h3>
+            <p class="delete-subtitle mb-0">{{ session('success') }}</p>
+        </div>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div id="errorModal" class="modal modal-show">
+        <div class="modal-content modal-center modal-sm">
+            <div class="warning-icon text-error">
+                <svg class="icon-success-modal" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <h3 class="delete-title">Oops, Terjadi Kesalahan!</h3>
+            <p class="delete-subtitle mb-0">{{ session('error') }}</p>
+        </div>
+    </div>
+    @endif
+
     <script>
+        function openEditDetailModal(id, userId, kegiatan, deskripsi, jumlah) {
+            document.getElementById('editDetailModal').style.display = 'block';
+
+            let userSelect = document.getElementById('edit_user_id');
+            if (userSelect) userSelect.value = userId;
+
+            document.getElementById('edit_kegiatan').value = kegiatan;
+            document.getElementById('edit_deskripsi').value = deskripsi;
+            document.getElementById('edit_jumlah_anggaran').value = jumlah;
+
+            document.getElementById('editDetailForm').action = "{{ url('finance/detail') }}/" + id;
+        }
+        function closeEditDetailModal() { document.getElementById('editDetailModal').style.display = 'none'; }
+
         function openImageModal(src) {
             document.getElementById('imageModal').style.display = 'block';
             document.getElementById('modalImage').src = src;
@@ -166,7 +275,17 @@
         window.onclick = function(event) {
             if (event.target == document.getElementById('imageModal')) closeImageModal();
             if (event.target == document.getElementById('deleteModal')) closeDeleteModal();
+            if (event.target == document.getElementById('editDetailModal')) closeEditDetailModal();
         };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                let s = document.getElementById('successModal');
+                let e = document.getElementById('errorModal');
+                if(s) s.style.display = 'none';
+                if(e) e.style.display = 'none';
+            }, 1500);
+        });
     </script>
 </div>
 @endsection
