@@ -29,10 +29,10 @@ class FinanceController extends Controller
         foreach ($periodeLaporans as $periode) {
             $budgets = budget::where('periode_laporan_id', $periode->id)->get();
             $details = detailLaporan::where('periode_laporan_id', $periode->id)->get();
-            
+
             $totalBudget = $budgets->sum('jumlah_budget');
             $totalRealized = $details->sum('jumlah_anggaran');
-            
+
             $finansialData[$periode->id] = [
                 'periode' => $periode,
                 'budgets' => $budgets,
@@ -66,7 +66,7 @@ class FinanceController extends Controller
         $periode = periodeLaporan::with(['bulan', 'tahun', 'divisi'])->findOrFail($id);
         $budgets = budget::where('periode_laporan_id', $id)->get();
         $details = detailLaporan::where('periode_laporan_id', $id)->with('user')->get();
-        
+
         $totalBudget = $budgets->sum('jumlah_budget');
         $totalRealized = $details->sum('jumlah_anggaran');
 

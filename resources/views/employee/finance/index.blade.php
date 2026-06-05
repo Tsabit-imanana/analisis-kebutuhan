@@ -5,14 +5,11 @@
 @section('content')
 @vite(['resources/css/dashboard.css', 'resources/css/finance.css'])
 
-<div class="dashboard-container finance-container">
-    <div class="dashboard-header finance-header">
-        <div>
+<div class="finance-container">
+    <div class="page-header">
+        <div class="header-text">
             <h1>Finance Management</h1>
-            <p>Kelola periode laporan, budget, dan realisasi anggaran.</p>
-        </div>
-        <div class="finance-toolbar">
-            <a href="/" class="finance-btn finance-btn--secondary">← Back</a>
+            <p>Pantau periode laporan, budget, dan realisasi anggaran.</p>
         </div>
     </div>
 
@@ -33,46 +30,38 @@
         $grandRealized = $finansialData->sum('totalRealized');
         $grandRemaining = $grandBudget - $grandRealized;
         $grandPercentage = $grandBudget > 0 ? round(($grandRealized / $grandBudget) * 100, 2) : 0;
-        $grandPercentageForBar = max(0, min(100, $grandPercentage));
 
-        $finansialByDivisi = $finansialData
-            ->groupBy(fn ($item) => $item['periode']->divisi_id);
+        $finansialByDivisi = $finansialData->groupBy(fn ($item) => $item['periode']->divisi_id);
     @endphp
 
-    <div class="stat-card finance-card" style="margin: 0 0 12px 0;">
-        <div class="finance-graph">
-            <div class="finance-graph__header">
-                <div>
-                    <h2 class="finance-graph__title">Grafik Umum Budget vs Realisasi</h2>
-                    <p class="finance-graph__subtitle">
-                        Total Budget <strong>Rp{{ number_format($grandBudget, 0, ',', '.') }}</strong> •
-                        Realisasi <strong>Rp{{ number_format($grandRealized, 0, ',', '.') }}</strong> •
-                        Sisa <strong>Rp{{ number_format($grandRemaining, 0, ',', '.') }}</strong>
-                    </p>
-                </div>
-                <span class="finance-badge @if($grandPercentage <= 70) finance-badge--good @elseif($grandPercentage <= 90) finance-badge--warning @else finance-badge--danger @endif">
+    <div class="stats-row four-stats mb-4">
+        <div class="stat-card">
+            <span class="stat-title">Total Keseluruhan Budget</span>
+            <span class="stat-value">Rp{{ number_format($grandBudget, 0, ',', '.') }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Total Realisasi Digunakan</span>
+            <span class="stat-value">Rp{{ number_format($grandRealized, 0, ',', '.') }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Total Sisa Anggaran</span>
+            <span class="stat-value">Rp{{ number_format($grandRemaining, 0, ',', '.') }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">% Realisasi Keseluruhan</span>
+            <span class="stat-value">
+                <span class="status-badge @if($grandPercentage <= 70) badge-good @elseif($grandPercentage <= 90) badge-warning @else badge-danger @endif text-lg" style="padding: 4px 8px;">
                     {{ $grandPercentage }}%
                 </span>
-            </div>
-
-            <div class="finance-progress" aria-label="Progress realisasi terhadap total budget">
-                <div class="finance-progress__value" style="width: {{ $grandPercentageForBar }}%;"></div>
-            </div>
-
-            <div class="finance-progress-legend">
-                <span><span class="finance-dot finance-dot--budget"></span>Budget</span>
-                <span><span class="finance-dot finance-dot--realisasi"></span>Realisasi</span>
-                <span><span class="finance-dot finance-dot--sisa"></span>Sisa</span>
-            </div>
+            </span>
         </div>
     </div>
 
-    <h2 style="margin:16px 0 10px 0; font-size:18px;">Daftar Periode per Divisi</h2>
+    <h2 class="section-title">Daftar Periode per Divisi</h2>
+
     @if($finansialData->isEmpty())
-        <div class="stat-card finance-card" style="margin: 0 0 12px 0;">
-            <div class="finance-empty">
-                Tidak ada data periode laporan.
-            </div>
+        <div class="table-container">
+            <p class="empty-data">Tidak ada data periode laporan saat ini.</p>
         </div>
     @else
         @foreach ($finansialByDivisi as $divisiId => $items)
@@ -81,177 +70,67 @@
                 $divisiName = $firstPeriode?->divisi?->nama_divisi ?? '-';
             @endphp
 
-            <h3 style="margin:14px 0 10px 0; font-size:16px;">{{ $divisiName }}</h3>
+            <div class="table-container mb-4">
+                <div class="table-header">
+                    <h3>Divisi: {{ $divisiName }}</h3>
+                    <div class="table-controls">
+                        <span>Total Data: <strong>{{ $items->count() }} Periode</strong></span>
+                    </div>
+                </div>
 
-            <div class="finance-divisi-section" data-page-size="5">
-                <table class="finance-table">
-                    <thead>
-                        <tr>
-                            <th>Period</th>
-                            <th>Total Budget</th>
-                            <th>Total Realisasi</th>
-                            <th>Sisa Anggaran</th>
-                            <th>% Realisasi</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($items as $data)
-                            <tr class="periode-row" data-periode-id="{{ $data['periode']->id }}" data-divisi="{{ $data['periode']->divisi_id }}" data-tahun="{{ $data['periode']->tahun_id }}" data-bulan="{{ $data['periode']->bulan_id }}">
-                                <td>
-                                    <strong>{{ $data['periode']->bulan->bulan ?? '-' }} {{ $data['periode']->tahun->tahun ?? '-' }}</strong>
-                                </td>
-                                <td class="currency">Rp{{ number_format($data['totalBudget'], 0, ',', '.') }}</td>
-                                <td class="currency">Rp{{ number_format($data['totalRealized'], 0, ',', '.') }}</td>
-                                <td class="currency">
-                                    <span class="finance-badge {{ $data['remaining'] >= 0 ? 'finance-badge--good' : 'finance-badge--danger' }}">
-                                        Rp{{ number_format($data['remaining'], 0, ',', '.') }}
-                                    </span>
-                                </td>
-                                <td class="percentage">
-                                    <span class="finance-badge @if($data['percentage'] <= 70) finance-badge--good @elseif($data['percentage'] <= 90) finance-badge--warning @else finance-badge--danger @endif">
-                                        {{ $data['percentage'] }}%
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="finance-action-buttons">
-                                        <a href="{{ route('finance.show', $data['periode']->id) }}" class="finance-btn finance-btn--secondary finance-btn--sm">View</a>
-                                        <button type="button" onclick="openDetailModal({{ $data['periode']->id }})" class="finance-btn finance-btn--secondary finance-btn--sm">+ Detail</button>
-                                    </div>
-                                </td>
+                <div class="table-responsive finance-divisi-section">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Total Budget</th>
+                                <th>Total Realisasi</th>
+                                <th>Sisa Anggaran</th>
+                                <th>% Realisasi</th>
+                                <th>Action</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <div class="finance-pagination">
-                    <button type="button" class="finance-btn finance-btn--secondary finance-btn--sm" data-action="prev">Prev</button>
-                    <span class="finance-pagination__info">Page 1</span>
-                    <button type="button" class="finance-btn finance-btn--secondary finance-btn--sm" data-action="next">Next</button>
+                        </thead>
+                        <tbody>
+                            @foreach ($items as $data)
+                                <tr class="periode-row" data-periode-id="{{ $data['periode']->id }}">
+                                    <td><strong>{{ $data['periode']->bulan->bulan ?? '-' }} {{ $data['periode']->tahun->tahun ?? '-' }}</strong></td>
+                                    <td>Rp{{ number_format($data['totalBudget'], 0, ',', '.') }}</td>
+                                    <td>Rp{{ number_format($data['totalRealized'], 0, ',', '.') }}</td>
+                                    <td>
+                                        <span class="status-badge {{ $data['remaining'] >= 0 ? 'badge-good' : 'badge-danger' }}">
+                                            Rp{{ number_format($data['remaining'], 0, ',', '.') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge @if($data['percentage'] <= 70) badge-good @elseif($data['percentage'] <= 90) badge-warning @else badge-danger @endif">
+                                            {{ $data['percentage'] }}%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-cell">
+                                            <a href="{{ route('finance.show', $data['periode']->id) }}" class="btn-icon" title="View Detail">
+                                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         @endforeach
     @endif
 
-
-    <div id="detailModal" class="modal">
-        <div class="modal-content">
-            <div class="finance-modal-header">
-                <h3>Tambah Detail Laporan</h3>
-                <button type="button" class="finance-modal-close" onclick="closeDetailModal()">&times;</button>
-            </div>
-            <form action="{{ route('finance.detail.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="finance-field">
-                    <label>Periode</label>
-                    <input type="hidden" name="periode_laporan_id" id="detail_periode_id">
-                    <input type="text" id="detail_periode_display" disabled>
-                </div>
-                <div class="finance-field">
-                    <label>User (PIC)</label>
-                    <select name="user_id" required>
-                        <option value="">-- Pilih User --</option>
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="finance-field">
-                    <label>Kegiatan</label>
-                    <input type="text" name="kegiatan" required>
-                </div>
-                <div class="finance-field">
-                    <label>Deskripsi</label>
-                    <textarea name="deskripsi" required></textarea>
-                </div>
-                <div class="finance-field">
-                    <label>Jumlah Anggaran (Rp)</label>
-                    <input type="number" name="jumlah_anggaran" required min="0" step="100">
-                </div>
-                <div class="finance-field">
-                    <label>Bukti Foto</label>
-                    <input type="file" name="bukti_foto" accept="image/*">
-                </div>
-                <div class="finance-form-actions">
-                    <button type="button" onclick="closeDetailModal()" class="finance-btn finance-btn--secondary">Batal</button>
-                    <button type="submit" class="finance-btn finance-btn--primary">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
     <script>
-        function initDivisiPaginations() {
-            document.querySelectorAll('.finance-divisi-section[data-page-size]').forEach(section => {
-                const pageSize = Math.max(1, parseInt(section.dataset.pageSize || '5', 10));
-                const rows = Array.from(section.querySelectorAll('tbody tr'));
-                const pagination = section.querySelector('.finance-pagination');
-                const infoEl = section.querySelector('.finance-pagination__info');
-                const prevBtn = section.querySelector('button[data-action="prev"]');
-                const nextBtn = section.querySelector('button[data-action="next"]');
-
-                if (!pagination || !infoEl || !prevBtn || !nextBtn) {
-                    return;
-                }
-
-                const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
-                let currentPage = 1;
-
-                function render() {
-                    const start = (currentPage - 1) * pageSize;
-                    const end = start + pageSize;
-
-                    rows.forEach((row, idx) => {
-                        row.style.display = (idx >= start && idx < end) ? '' : 'none';
-                    });
-
-                    infoEl.textContent = `Page ${currentPage} of ${totalPages}`;
-                    prevBtn.disabled = currentPage <= 1;
-                    nextBtn.disabled = currentPage >= totalPages;
-
-                    pagination.style.display = totalPages <= 1 ? 'none' : '';
-                }
-
-                prevBtn.addEventListener('click', () => {
-                    if (currentPage > 1) {
-                        currentPage -= 1;
-                        render();
-                    }
-                });
-
-                nextBtn.addEventListener('click', () => {
-                    if (currentPage < totalPages) {
-                        currentPage += 1;
-                        render();
-                    }
-                });
-
-                render();
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', initDivisiPaginations);
-
-        function openDetailModal(periodeId) {
-            const row = document.querySelector(`tr.periode-row[data-periode-id="${periodeId}"]`);
-            const periodeDisplay = row?.querySelector('td strong')?.textContent || 'Unknown';
-
-            document.getElementById('detail_periode_id').value = periodeId;
-            document.getElementById('detail_periode_display').value = periodeDisplay;
-            document.getElementById('detailModal').style.display = 'block';
-        }
-
-        function closeDetailModal() {
-            document.getElementById('detailModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const detailModal = document.getElementById('detailModal');
-            if (event.target === detailModal) {
-                closeDetailModal();
-            }
-        };
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                let s = document.getElementById('successModal');
+                let e = document.getElementById('errorModal');
+                if(s) s.style.display = 'none';
+                if(e) e.style.display = 'none';
+            }, 1000);
+        });
     </script>
 </div>
 @endsection

@@ -183,16 +183,27 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: color 0.2s ease-in-out;
 }
 
 .btn-icon:hover {
     color: #111827;
 }
 
-.btn-modal-action {
-    width: 120px;
-    padding: 12px;
-    border-radius: 8px;
+.btn-dark svg,
+.btn-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.btn-dark svg {
+    width: 16px;
+    height: 16px;
 }
 
 .status-badge {
@@ -222,32 +233,38 @@ body {
 .form-control,
 .form-select {
     border: 1px solid #d1d5db;
-    border-radius: 4px;
+    border-radius: 6px;
     box-sizing: border-box;
     font-family: inherit;
     font-size: 14px;
     outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #9ca3af;
 }
 
 .form-control {
     width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    margin-bottom: 12px;
+    padding: 10px 12px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    resize: vertical;
 }
 
 .form-select {
     padding: 6px 12px;
     background-color: #fff;
     cursor: pointer;
-    border-radius: 6px;
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-start;
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 
 .modal {
@@ -273,6 +290,22 @@ body {
     max-width: 90%;
 }
 
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.modal-content label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    display: block;
+    margin-bottom: 6px;
+}
+
 .modal-center {
     text-align: center;
     padding: 40px 32px;
@@ -288,52 +321,12 @@ body {
     gap: 16px;
 }
 
-.pagination-wrapper {
-    display: flex;
+.btn-modal-action {
+    width: 120px;
     justify-content: center;
-    margin-top: 32px;
-    margin-bottom: 8px;
-}
-
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 8px;
-}
-
-.pagination li a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-    background-color: #ffffff;
-    border: 1px solid #d1d5db;
-    color: #374151;
-    text-decoration: none;
+    padding: 12px;
     font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.pagination li a:hover:not(.disabled):not(.active) {
-    background-color: #f3f4f6;
-    color: #111827;
-}
-
-.pagination li a.active {
-    background-color: #000000;
-    color: #ffffff;
-    border-color: #000000;
-}
-
-.pagination li a.disabled {
-    color: #9ca3af;
-    cursor: not-allowed;
-    background-color: #f9fafb;
+    border-radius: 8px;
 }
 
 .alert-success {
@@ -342,6 +335,11 @@ body {
     color: #155724;
     border-radius: 6px;
     margin-bottom: 24px;
+}
+
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
 }
 
 .empty-data {
@@ -369,26 +367,6 @@ body {
     font-size: 14px;
     color: #4b5563;
     margin: 0 0 32px 0;
-}
-
-.btn-dark svg {
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.btn-icon svg {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }
 
 .icon-delete-modal {

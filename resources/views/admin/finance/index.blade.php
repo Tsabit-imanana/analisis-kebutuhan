@@ -26,6 +26,18 @@
         </button>
     </div>
 
+    @if(session('success'))
+        <div class="finance-alert finance-alert--success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="finance-alert finance-alert--error">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @php
         $grandBudget = $finansialData->sum('totalBudget');
         $grandRealized = $finansialData->sum('totalRealized');
@@ -103,10 +115,21 @@
                             @foreach ($items as $data)
                                 <tr class="periode-row" data-periode-id="{{ $data['periode']->id }}">
                                     <td><strong>{{ $data['periode']->bulan->bulan ?? '-' }} {{ $data['periode']->tahun->tahun ?? '-' }}</strong></td>
-                                    <td>Rp{{ number_format($data['totalBudget'], 0, ',', '.') }}</td>
-                                    <td>Rp{{ number_format($data['totalRealized'], 0, ',', '.') }}</td>
-                                    <td class="currency">Rp{{ number_format($data['remaining'], 0, ',', '.') }}</td>
-                                    <td class="percentage">{{ $data['percentage'] }}%</td>
+                                    <td class="currency">Rp{{ number_format($data['totalBudget'], 0, ',', '.') }}</td>
+                                    <td class="currency">Rp{{ number_format($data['totalRealized'], 0, ',', '.') }}</td>
+
+                                    <td class="currency">
+                                        <span class="status-badge {{ $data['remaining'] >= 0 ? 'badge-good' : 'badge-danger' }}">
+                                            Rp{{ number_format($data['remaining'], 0, ',', '.') }}
+                                        </span>
+                                    </td>
+
+                                    <td class="percentage">
+                                        <span class="status-badge @if($data['percentage'] <= 70) badge-good @elseif($data['percentage'] <= 90) badge-warning @else badge-danger @endif">
+                                            {{ $data['percentage'] }}%
+                                        </span>
+                                    </td>
+
                                     <td>
                                         <div class="action-cell">
                                             <a href="{{ route('finance.show', $data['periode']->id) }}" class="btn-icon" title="View Detail">
@@ -122,7 +145,7 @@
                                             <button type="button" onclick="openDetailModal({{ $data['periode']->id }}, '{{ $data['periode']->bulan->bulan ?? '' }} {{ $data['periode']->tahun->tahun ?? '' }}')" class="btn-icon" title="Tambah Detail Laporan">
                                                 <svg viewBox="0 0 24 24" class="icon-fill">
                                                     <path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM7 17H12V15H7V17Z"></path>
-                                                    <path d="M5 5H9V3H5C3.9 3 3 3.9 3 5V9H5V5ZM5 21H9V19H5V15H3V19C3 20.1 3.9 21 5 21ZM21 15H19V19H15V21H19C20.1 21 21 20.1 21 19V15ZM21 5C21 3.9 20.1 3 19 3H15V5H19V9H21V5Z"></path>
+                                                    <path d="M5 5H9V3H5C3.9 3 3 3.9 3 5V9H5V5ZM5 21H9V19H5V15H3V19C3 20.1 3.9 21 5 21ZM21 15H19V19H15V21H19C20.1 21 21 19V15ZM21 5C21 3.9 20.1 3 19 3H15V5H19V9H21V5Z"></path>
                                                 </svg>
                                             </button>
                                             <button type="button" onclick="openDeleteModal('{{ route('periode.destroy', $data['periode']->id) }}')" class="btn-icon" title="Delete">
@@ -141,19 +164,24 @@
 
     <div id="budgetModal" class="modal">
         <div class="modal-content">
-            <h3>Tambah Budget</h3>
+            <div class="finance-modal-header">
+                <h3>Tambah Budget</h3>
+                <button type="button" class="finance-modal-close" onclick="closeBudgetModal()">&times;</button>
+            </div>
             <form action="{{ route('finance.budget.store') }}" method="POST">
                 @csrf
-                <label>Periode</label>
-                <input type="hidden" name="periode_laporan_id" id="budget_periode_id">
-                <input type="text" id="budget_periode_display" disabled class="form-control">
-
-                <label>Jumlah Budget (Rp)</label>
-                <input type="number" name="jumlah_budget" required min="0" step="100" class="form-control">
-
-                <div class="form-actions">
+                <div class="finance-field">
+                    <label>Periode</label>
+                    <input type="hidden" name="periode_laporan_id" id="budget_periode_id">
+                    <input type="text" id="budget_periode_display" disabled class="form-control">
+                </div>
+                <div class="finance-field">
+                    <label>Jumlah Budget (Rp)</label>
+                    <input type="number" name="jumlah_budget" required min="0" step="100" class="form-control">
+                </div>
+                <div class="finance-form-actions">
+                    <button type="button" onclick="closeBudgetModal()" class="btn-light">Batal</button>
                     <button type="submit" class="btn-dark">Simpan</button>
-                    <button type="button" class="btn-light" onclick="closeBudgetModal()">Batal</button>
                 </div>
             </form>
         </div>
@@ -161,36 +189,45 @@
 
     <div id="detailModal" class="modal">
         <div class="modal-content">
-            <h3>Tambah Detail Laporan</h3>
+            <div class="finance-modal-header">
+                <h3>Tambah Detail Laporan</h3>
+                <button type="button" class="finance-modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
             <form action="{{ route('finance.detail.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <label>Periode</label>
-                <input type="hidden" name="periode_laporan_id" id="detail_periode_id">
-                <input type="text" id="detail_periode_display" disabled class="form-control">
-
-                <label>User (PIC)</label>
-                <select name="user_id" required class="form-control">
-                    <option value="">-- Pilih User --</option>
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-
-                <label>Kegiatan</label>
-                <input type="text" name="kegiatan" required class="form-control">
-
-                <label>Deskripsi</label>
-                <textarea name="deskripsi" required class="form-control" rows="3"></textarea>
-
-                <label>Jumlah Anggaran (Rp)</label>
-                <input type="number" name="jumlah_anggaran" required min="0" step="100" class="form-control">
-
-                <label>Bukti Foto</label>
-                <input type="file" name="bukti_foto" accept="image/*" class="form-control" style="border:none; padding-left:0;">
-
-                <div class="form-actions">
+                <div class="finance-field">
+                    <label>Periode</label>
+                    <input type="hidden" name="periode_laporan_id" id="detail_periode_id">
+                    <input type="text" id="detail_periode_display" disabled class="form-control">
+                </div>
+                <div class="finance-field">
+                    <label>User (PIC)</label>
+                    <select name="user_id" required class="form-control">
+                        <option value="">-- Pilih User --</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="finance-field">
+                    <label>Kegiatan</label>
+                    <input type="text" name="kegiatan" required class="form-control">
+                </div>
+                <div class="finance-field">
+                    <label>Deskripsi</label>
+                    <textarea name="deskripsi" required class="form-control" rows="3"></textarea>
+                </div>
+                <div class="finance-field">
+                    <label>Jumlah Anggaran (Rp)</label>
+                    <input type="number" name="jumlah_anggaran" required min="0" step="100" class="form-control">
+                </div>
+                <div class="finance-field">
+                    <label>Bukti Foto</label>
+                    <input type="file" name="bukti_foto" accept="image/*" class="form-control" style="border:none; padding-left:0;">
+                </div>
+                <div class="finance-form-actions">
+                    <button type="button" onclick="closeDetailModal()" class="btn-light">Batal</button>
                     <button type="submit" class="btn-dark">Simpan</button>
-                    <button type="button" class="btn-light" onclick="closeDetailModal()">Batal</button>
                 </div>
             </form>
         </div>
@@ -198,36 +235,42 @@
 
     <div id="periodeModal" class="modal">
         <div class="modal-content">
-            <h3>Tambah Periode Laporan</h3>
+            <div class="finance-modal-header">
+                <h3>Tambah Periode Laporan</h3>
+                <button type="button" class="finance-modal-close" onclick="closeAddPeriodModal()">&times;</button>
+            </div>
             <form action="/periode-laporan" method="POST">
                 @csrf
-                <label>Tahun</label>
-                <select name="tahun_id" required class="form-control">
-                    <option value="">-- Pilih Tahun --</option>
-                    @foreach ($tahun as $t)
-                        <option value="{{ $t->id }}">{{ $t->tahun }}</option>
-                    @endforeach
-                </select>
-
-                <label>Bulan</label>
-                <select name="bulan_id" required class="form-control">
-                    <option value="">-- Pilih Bulan --</option>
-                    @foreach ($bulan as $b)
-                        <option value="{{ $b->id }}">{{ $b->bulan }}</option>
-                    @endforeach
-                </select>
-
-                <label>Divisi</label>
-                <select name="divisi_id" required class="form-control">
-                    <option value="">-- Pilih Divisi --</option>
-                    @foreach ($divisi as $d)
-                        <option value="{{ $d->id }}">{{ $d->nama_divisi }}</option>
-                    @endforeach
-                </select>
-
-                <div class="form-actions">
+                <div class="finance-field">
+                    <label>Tahun</label>
+                    <select name="tahun_id" required class="form-control">
+                        <option value="">-- Pilih Tahun --</option>
+                        @foreach ($tahun as $t)
+                            <option value="{{ $t->id }}">{{ $t->tahun }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="finance-field">
+                    <label>Bulan</label>
+                    <select name="bulan_id" required class="form-control">
+                        <option value="">-- Pilih Bulan --</option>
+                        @foreach ($bulan as $b)
+                            <option value="{{ $b->id }}">{{ $b->bulan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="finance-field">
+                    <label>Divisi</label>
+                    <select name="divisi_id" required class="form-control">
+                        <option value="">-- Pilih Divisi --</option>
+                        @foreach ($divisi as $d)
+                            <option value="{{ $d->id }}">{{ $d->nama_divisi }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="finance-form-actions">
+                    <button type="button" onclick="closeAddPeriodModal()" class="btn-light">Batal</button>
                     <button type="submit" class="btn-dark">Simpan</button>
-                    <button type="button" class="btn-light" onclick="closeAddPeriodModal()">Batal</button>
                 </div>
             </form>
         </div>
@@ -319,7 +362,7 @@
                 let e = document.getElementById('errorModal');
                 if(s) s.style.display = 'none';
                 if(e) e.style.display = 'none';
-            }, 1500);
+            }, 1000);
 
             if(typeof renderFinanceChart === 'function') {
                 renderFinanceChart('financeManagementChart', {{ $grandRealized ?? 0 }}, {{ $grandRemaining ?? 0 }}, {{ $grandPercentage ?? 0 }});

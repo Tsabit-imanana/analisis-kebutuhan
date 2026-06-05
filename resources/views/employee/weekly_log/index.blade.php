@@ -7,7 +7,7 @@
 
     <div class="weekly-container">
         @if (session('error'))
-            <div class="alert-success" style="background: #fee2e2; color: #991b1b;">
+            <div class="alert-success alert-error">
                 {{ session('error') }}
             </div>
         @endif
@@ -18,7 +18,10 @@
                 <p>Pencatatan aktivitas harian untuk kebutuhan laporan.</p>
             </div>
             <button class="btn-dark" onclick="openAddModal()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <svg viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
                 Log Baru
             </button>
         </div>
@@ -78,7 +81,7 @@
                                     <td>{{ $log->notes }}</td>
                                     <td>
                                         @if ($log->photo)
-                                            <img src="{{ $log->photo }}" alt="Foto Weekly Log" class="table-img" onerror="this.outerHTML='<span style=\'color:red;\'>Error: Foto tidak bisa dimuat</span>';" />
+                                            <img src="{{ $log->photo }}" alt="Foto Weekly Log" class="table-img" onerror="this.outerHTML='<span class=\'text-error\'>Error: Foto tidak bisa dimuat</span>';" />
                                         @else
                                             <span class="text-muted">Tidak ada foto.</span>
                                         @endif
@@ -97,30 +100,14 @@
                                                     data-description="{{ htmlspecialchars($log->description, ENT_QUOTES, 'UTF-8') }}"
                                                     data-notes="{{ htmlspecialchars($log->notes, ENT_QUOTES, 'UTF-8') }}"
                                                 >
-                                                    <svg
-                                                        width="18"
-                                                        height="18"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round">
+                                                    <svg viewBox="0 0 24 24">
                                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                                     </svg>
                                                 </button>
 
                                                 <button type="button" class="btn-icon" onclick="openDeleteModal('{{ route('employee.weekly_log.destroy', $log->id) }}')">
-                                                    <svg
-                                                        width="18"
-                                                        height="18"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round">
+                                                    <svg viewBox="0 0 24 24">
                                                         <polyline points="3 6 5 6 21 6"></polyline>
                                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                                     </svg>
@@ -144,23 +131,23 @@
                 @csrf
                 <input type="hidden" name="logged_by" value="{{ auth()->id() }}">
 
-                <label>Tanggal Mulai</label><br>
-                <input type="date" name="s_date" required class="form-control"><br>
+                <label>Tanggal Mulai</label>
+                <input type="date" name="s_date" required class="form-control">
 
-                <label>Tanggal Selesai</label><br>
-                <input type="date" name="f_date" required class="form-control"><br>
+                <label>Tanggal Selesai</label>
+                <input type="date" name="f_date" required class="form-control">
 
-                <label>Title</label><br>
-                <input type="text" name="title" required class="form-control"><br>
+                <label>Title</label>
+                <input type="text" name="title" required class="form-control">
 
-                <label>Description</label><br>
-                <textarea name="description" class="form-control"></textarea><br>
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="3"></textarea>
 
-                <label>Notes</label><br>
-                <textarea name="notes" class="form-control"></textarea><br>
+                <label>Notes</label>
+                <textarea name="notes" class="form-control" rows="2"></textarea>
 
-                <label>Photo</label><br>
-                <input type="file" name="photo" accept="image/*" class="form-control"><br><br>
+                <label>Photo</label>
+                <input type="file" name="photo" accept="image/*" class="form-control" style="border: none; padding-left: 0;">
 
                 <div class="form-actions">
                     <button type="submit" class="btn-dark">Simpan</button>
@@ -179,23 +166,23 @@
                 <input type="hidden" name="logged_by" value="{{ auth()->id() }}">
                 <input type="hidden" name="status" value="pending">
 
-                <label>Tanggal Mulai</label><br>
-                <input type="date" name="s_date" id="edit_s_date" required class="form-control"><br>
+                <label>Tanggal Mulai</label>
+                <input type="date" name="s_date" id="edit_s_date" required class="form-control">
 
-                <label>Tanggal Selesai</label><br>
-                <input type="date" name="f_date" id="edit_f_date" required class="form-control"><br>
+                <label>Tanggal Selesai</label>
+                <input type="date" name="f_date" id="edit_f_date" required class="form-control">
 
-                <label>Title</label><br>
-                <input type="text" name="title" id="edit_title" required class="form-control"><br>
+                <label>Title</label>
+                <input type="text" name="title" id="edit_title" required class="form-control">
 
-                <label>Description</label><br>
-                <textarea name="description" id="edit_description" class="form-control"></textarea><br>
+                <label>Description</label>
+                <textarea name="description" id="edit_description" class="form-control" rows="3"></textarea>
 
-                <label>Notes</label><br>
-                <textarea name="notes" id="edit_notes" class="form-control"></textarea><br>
+                <label>Notes</label>
+                <textarea name="notes" id="edit_notes" class="form-control" rows="2"></textarea>
 
-                <label>Photo (Kosongkan jika tidak diubah)</label><br>
-                <input type="file" name="photo" accept="image/*" class="form-control"><br><br>
+                <label>Photo (Kosongkan jika tidak diubah)</label>
+                <input type="file" name="photo" accept="image/*" class="form-control" style="border: none; padding-left: 0;">
 
                 <div class="form-actions">
                     <button type="submit" class="btn-dark">Simpan</button>
@@ -208,8 +195,8 @@
     <div id="deleteModal" class="modal">
         <div class="modal-content modal-center modal-sm">
             <div class="warning-icon">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L1 21H23L12 2ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z" fill="black"/>
+                <svg class="icon-delete-modal" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21H23L12 2ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z"/>
                 </svg>
             </div>
             <h3 class="delete-title">Apakah Anda Yakin Ingin Menghapus Data?</h3>
@@ -227,13 +214,16 @@
     </div>
 
     @if(session('success'))
-        <div id="successModal" class="modal" style="display: block;">
+        <div id="successModal" class="modal modal-show">
             <div class="modal-content modal-center modal-sm">
-                <div class="warning-icon" style="color: #10b981;">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <div class="warning-icon color-success">
+                    <svg class="icon-success-modal" viewBox="0 0 24 24">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
                 </div>
                 <h3 class="delete-title">Berhasil!</h3>
-                <p class="delete-subtitle" style="margin-bottom: 0;">{{ session('success') }}</p>
+                <p class="delete-subtitle mb-0">{{ session('success') }}</p>
             </div>
         </div>
     @endif
@@ -258,9 +248,7 @@
             document.getElementById('deleteModal').style.display = 'block';
             document.getElementById('deleteForm').action = actionUrl;
         }
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
-        }
+        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
 
         window.onclick = function(event) {
             if (event.target == document.getElementById('addModal')) closeAddModal();
