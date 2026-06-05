@@ -16,20 +16,18 @@
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1>Dashboard SPV</h1>
-            <p>Ringkasan data yang dapat diakses SPV.</p>
+            <p>Ringkasan data operasional dan finansial yang dapat diakses oleh SPV.</p>
         </div>
 
         <h2 class="section-title">Ringkasan Umum</h2>
-        <div class="dashboard-section">
-            <div class="stats-grid-2x2">
-                <div class="stat-card">
-                    <span class="stat-title">Total Task</span>
-                    <span class="stat-value">{{ $taskTotal ?? 0 }}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-title">Total Weekly Log</span>
-                    <span class="stat-value">{{ $weeklyTotal ?? 0 }}</span>
-                </div>
+        <div class="stats-row" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="stat-card">
+                <span class="stat-title">Total Keseluruhan Task</span>
+                <span class="stat-value">{{ $taskTotal ?? 0 }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Total Weekly Log</span>
+                <span class="stat-value">{{ $weeklyTotal ?? 0 }}</span>
             </div>
         </div>
 

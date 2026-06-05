@@ -26,18 +26,6 @@
         </button>
     </div>
 
-    @if(session('success'))
-        <div class="finance-alert finance-alert--success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="finance-alert finance-alert--error">
-            {{ session('error') }}
-        </div>
-    @endif
-
     @php
         $grandBudget = $finansialData->sum('totalBudget');
         $grandRealized = $finansialData->sum('totalRealized');
@@ -166,7 +154,6 @@
         <div class="modal-content">
             <div class="finance-modal-header">
                 <h3>Tambah Budget</h3>
-                <button type="button" class="finance-modal-close" onclick="closeBudgetModal()">&times;</button>
             </div>
             <form action="{{ route('finance.budget.store') }}" method="POST">
                 @csrf
@@ -191,7 +178,6 @@
         <div class="modal-content">
             <div class="finance-modal-header">
                 <h3>Tambah Detail Laporan</h3>
-                <button type="button" class="finance-modal-close" onclick="closeDetailModal()">&times;</button>
             </div>
             <form action="{{ route('finance.detail.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -237,7 +223,6 @@
         <div class="modal-content">
             <div class="finance-modal-header">
                 <h3>Tambah Periode Laporan</h3>
-                <button type="button" class="finance-modal-close" onclick="closeAddPeriodModal()">&times;</button>
             </div>
             <form action="/periode-laporan" method="POST">
                 @csrf
