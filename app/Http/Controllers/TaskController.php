@@ -47,15 +47,18 @@ class TaskController extends Controller
 
         $view = match ($user?->role) {
             'employee' => 'employee.task.index',
-            'spv' => 'spv.task.index',
             default => 'admin.task.index',
         };
 
         $users = collect();
         if ($user && in_array($user->role, ['admin', 'spv'], true)) {
-            $users = User::select('id', 'name')
-                ->where('role', 'employee')
-                ->get();
+            if ($user->role === 'admin') {
+                $users = User::select('id', 'name')->get();
+            } else {
+                $users = User::select('id', 'name')
+                             ->where('divisi_id', $user->divisi_id)
+                             ->get();
+            }
         }
 
         return view($view, [

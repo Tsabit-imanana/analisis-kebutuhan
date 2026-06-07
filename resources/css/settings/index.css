@@ -247,6 +247,70 @@ input:focus, select:focus, textarea:focus {
     justify-content: center;
 }
 
+.modal-show {
+    display: block;
+}
+
+.modal-sm {
+    width: 400px;
+}
+
+.modal-center {
+    text-align: center;
+    padding: 40px 32px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.btn-modal-action {
+    width: 120px;
+    justify-content: center;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+.warning-icon {
+    margin-bottom: 24px;
+}
+
+.icon-delete-modal {
+    width: 64px;
+    height: 64px;
+    fill: #000000;
+}
+
+.icon-success-modal {
+    width: 64px;
+    height: 64px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.delete-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 8px 0;
+}
+
+.delete-subtitle {
+    font-size: 14px;
+    color: #4b5563;
+    margin: 0 0 32px 0;
+}
+
+.color-success { color: #10b981; }
+.text-error { color: #ef4444; }
+.mb-0 { margin-bottom: 0; }
+
 @media (max-width: 768px) {
     .header {
         flex-direction: column;

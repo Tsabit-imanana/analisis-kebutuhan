@@ -4,6 +4,7 @@
 
 @section('content')
     @vite('resources/css/settings/index.css')
+
     <div class="settings-container">
         <div class="header">
             <div>
@@ -12,14 +13,6 @@
             </div>
             <button type="button" class="btn btn-primary" onclick="openAddModal()">Tambah Divisi</button>
         </div>
-
-        @if(session('success'))
-            <div class="message success">{{ session('success') }}</div>
-        @endif
-
-        @if(session('error'))
-            <div class="message error">{{ session('error') }}</div>
-        @endif
 
         @if($errors->any())
             <div class="message error">
@@ -62,11 +55,9 @@
                                             Edit
                                         </button>
 
-                                        <form method="POST" action="{{ route('settings.destroy', $divisi) }}" class="inline-form" onsubmit="return confirm('Yakin ingin menghapus divisi ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Hapus</button>
-                                        </form>
+                                        <button type="button" class="btn btn-danger" onclick="openDeleteModal('{{ route('settings.destroy', $divisi->id) }}')">
+                                            Hapus
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -151,38 +142,90 @@
         </div>
     </div>
 
+    <div id="deleteModal" class="modal">
+        <div class="modal-content modal-center modal-sm">
+            <div class="warning-icon">
+                <svg class="icon-delete-modal" viewBox="0 0 24 24">
+                    <path d="M12 2L1 21H23L12 2ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z"/>
+                </svg>
+            </div>
+            <h3 class="delete-title">Apakah Anda Yakin Ingin Menghapus Data?</h3>
+            <p class="delete-subtitle">Data divisi akan dihapus secara permanen</p>
+            <div class="modal-actions">
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-primary btn-modal-action">Ya</button>
+                </form>
+                <button type="button" class="btn btn-secondary btn-modal-action" onclick="closeDeleteModal()">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div id="successModal" class="modal modal-show">
+            <div class="modal-content modal-center modal-sm">
+                <div class="warning-icon color-success">
+                    <svg class="icon-success-modal" viewBox="0 0 24 24">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3 class="delete-title">Berhasil!</h3>
+                <p class="delete-subtitle mb-0">{{ session('success') }}</p>
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div id="errorModal" class="modal modal-show">
+            <div class="modal-content modal-center modal-sm">
+                <div class="warning-icon text-error">
+                    <svg class="icon-success-modal" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <h3 class="delete-title">Oops, Terjadi Kesalahan!</h3>
+                <p class="delete-subtitle mb-0">{{ session('error') }}</p>
+            </div>
+        </div>
+    @endif
+
     <script>
-        function openAddModal() {
-            document.getElementById('addModal').style.display = 'block';
-        }
-        function closeAddModal() {
-            document.getElementById('addModal').style.display = 'none';
-        }
+        function openAddModal() { document.getElementById('addModal').style.display = 'block'; }
+        function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
 
         function openEditModal(button) {
             document.getElementById('editModal').style.display = 'block';
-
             var id = button.dataset.id;
             document.getElementById('edit_nama_divisi').value = button.dataset.nama;
-
             document.getElementById('editForm').action = "{{ url('settings') }}/" + id;
         }
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
 
-        function openReportModal() {
-            document.getElementById('reportModal').style.display = 'block';
-        }
+        function openReportModal() { document.getElementById('reportModal').style.display = 'block'; }
+        function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
 
-        function closeReportModal() {
-            document.getElementById('reportModal').style.display = 'none';
+        function openDeleteModal(actionUrl) {
+            document.getElementById('deleteModal').style.display = 'block';
+            document.getElementById('deleteForm').action = actionUrl;
         }
+        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
 
         window.onclick = function(event) {
             if (event.target == document.getElementById('addModal')) closeAddModal();
             if (event.target == document.getElementById('editModal')) closeEditModal();
             if (event.target == document.getElementById('reportModal')) closeReportModal();
+            if (event.target == document.getElementById('deleteModal')) closeDeleteModal();
         };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                var s = document.getElementById('successModal');
+                var e = document.getElementById('errorModal');
+                if (s) s.style.display = 'none';
+                if (e) e.style.display = 'none';
+            }, 1500);
+        });
     </script>
 @endsection
